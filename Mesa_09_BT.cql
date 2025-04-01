@@ -797,7 +797,7 @@ CALL apoc.ml.openai.chat(
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 9 - Bosques y Turberas" AS nombreMesa
 MATCH (t:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
@@ -815,7 +815,7 @@ CALL apoc.ml.openai.chat(
       role: 'system',
       content: "Actúa como un investigador en ciencias sociales especializado en sistematización de talleres participativos.\n\n" +
                "### Contexto:\n\"" + m.contexto + "\"\n\n" +
-               "Tu tarea es analizar un conjunto de comentarios reescritos que se han identificado como altamente relacionados con un fragmento específico de la NDC 2025 de Chile. A partir de este conjunto de comentarios y del contenido del fragmento, debes generar una sola recomendación estructurada orientada a optimizar y complementar el fragmento de la NDC que se quiere comentar.\n\n" +
+               "Tu tarea es analizar un conjunto de comentarios reescritos que se han identificado como altamente relacionados con un fragmento específico de la NDC 2025 de Chile. A partir de este conjunto de comentarios y del contenido del fragmento de la NDC, debes generar una sola recomendación estructurada orientada a optimizar y complementar el fragmento de la NDC que se quiere comentar.\n\n" +
                "### Fragmento de la NDC:\n\"" + t.texto + "\"\n\n" +
                "Cada recomendación debe seguir esta estructura:\n\n" +
                "[Context & Problem Statement] → [Scientific Evidence Summary] → [Detailed Recommendations] → [Implementation Considerations] → [Conclusion & Urgency]\n\n" +
@@ -824,7 +824,7 @@ CALL apoc.ml.openai.chat(
                "[Detailed Recommendations] → Expone la propuesta específica que se sugiere implementar. Debe ser clara, factible y orientada a resultados, incluyendo el qué, cómo y para qué de la acción recomendada.\n\n" +
                "[Implementation Considerations] → Describe los aspectos clave para llevar a cabo la recomendación, como recursos necesarios, actores involucrados, plazos tentativos o posibles dificultades.\n\n" +
                "[Conclusion & Urgency] → Reafirma la importancia de la acción propuesta y su contribución al logro de los objetivos climáticos. Puede destacar beneficios esperados y los riesgos de no actuar a tiempo.\n\n" +
-               "No generes más de 1 recomendación por fragmento de la NDC. No repitas comentarios individuales ni copies el texto de la NDC. La recomendación debe basarse en el contenido combinado de los comentarios y estar alineada con el enfoque del fragmento presentado.\n\n" +
+               "No generes más de 1 recomendación por fragmento de la NDC. No repitas comentarios individuales ni copies el texto de la NDC. La recomendación debe basarse en el contenido combinado de los comentarios y estar orientada a abordar el fragmento de la NDC presentado.\n\n" +
                "### Formato de salida:\nUna recomendación estructurada. Debe estar redactada en una sola línea de texto."
     },
     {
@@ -840,12 +840,13 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.ID AS `ID NDC`,
   t.capitulo AS `Capítulo`,
+  t.subtitulo AS `Subcapítulo`,
   t.texto AS `Texto NDC`,
   comentariosConcatenados AS `Comentarios utilizados`,
   t.recomendacionesGPT AS `Recomendación generada`;
 
 // Paso 7_B - Mostrar tabla final con subcapítulo incluido
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 9 - Bosques y Turberas" AS nombreMesa
 MATCH (ndc:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
