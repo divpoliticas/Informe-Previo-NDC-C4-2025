@@ -1,6 +1,6 @@
 // Cargar comentarios reescritos (particular de cada mesa)
 :auto CALL {
-  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTC1rP23hGxhme6ChpAKE1sk3BnxbGNO_y43QcxFNtLj1bQu143i4QRtjVT--KzAJnSNzDfSHoHOcg3/pub?gid=967747149&single=true&output=csv" AS row
+  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2_fuLFHxnaWUps2DjG96ZITXS5m4XdUap9R4HG66FxR-LtYydtsajJBLHUdcll3EgJ-DsTOkp8_5F/pub?gid=1387692626&single=true&output=csv" AS row
   FIELDTERMINATOR ','
   CREATE (c:Comentario)
   SET c.dialogo = row.`Dialogo Virtual o Presencial`,
@@ -155,19 +155,22 @@ CALL apoc.ml.openai.chat(
       role: 'system',
       content: "Actúa como un investigador experto en análisis cualitativo y políticas públicas en el contexto de cambio climático. Tu tarea es asignar un **nombre temático claro y conciso** y una definición a este conjunto de comentarios reescritos.\n\n Contexto:\nResumen detallado de lo trabajado en la mesa y el detalle del documento NDC referido a esta mesa
 
-La Economía Circular (EC) se define como un modelo de producción y consumo que busca mantener los materiales en circulación durante el mayor tiempo posible, con el objetivo principal de reducir la generación de residuos y optimizar el uso de los recursos. Este enfoque disminuye las emisiones de Gases de Efecto Invernadero (GEI) provenientes de la extracción de materias primas, la fabricación, el transporte y la disposición final de los residuos, al mismo tiempo que alivia la presión sobre los ecosistemas.
-La Economía Circular es un enfoque transformador y transversal que va más allá de la mitigación del cambio climático, conectando múltiples componentes de las Contribuciones Determinadas a Nivel Nacional (NDC) y otras políticas. Implica repensar todo el ciclo de vida de los productos, desde su diseño hasta su disposición final, priorizando la prevención de la generación de residuos, la reducción, la reutilización, la reparación y el reciclaje.
-Además, la Economía Circular contribuye a:
-- El pilar social mediante la creación de empleos verdes e inclusivos.
-- La adaptación al promover la gestión eficiente de recursos críticos.
-- La integración de ecosistemas al reducir la presión extractiva.
-- La dimensión subnacional a través de modelos territoriales adaptados.
-- Requiere medios de implementación específicos en términos de capacidades, tecnologías y financiamiento.
-En el contexto de la gestión de residuos en Chile, la Economía Circular se enfoca en la valorización de residuos orgánicos y la reducción de la generación de residuos por pérdida y desperdicio de alimentos. Se busca avanzar hacia este modelo a través de instrumentos como la Ley N° 20.920 (Ley REP), la Hoja de Ruta para un Chile Circular al año 2040, la Estrategia Nacional de Residuos Orgánicos, y la Ley N° 21.368 que regula la entrega de plásticos de un solo uso.
-Es importante destacar que la implementación de la Economía Circular también requiere indicadores y metas efectivas para medir el progreso de la transición y considerar las interconexiones con otras áreas como la transición socioecológica justa, la adaptación, la integración y los medios de implementación. También se ha señalado la necesidad de clarificar la definición de 'residuos' para abarcar no solo los domiciliarios sino también los de otros sectores como la agricultura, la industria y la minería.
+La 'Salud' en el contexto del cambio climático se entiende como un estado de bienestar físico y mental de las personas que se ve significativamente afectado por los impactos del cambio climático. Esto requiere de una mayor resiliencia del sector salud y de los servicios de salud para hacer frente a las consecuencias presentes y futuras del cambio climático.
+La 'Salud' en este contexto implica varios aspectos clave:
+- Impactos del Cambio Climático: El cambio climático tiene efectos directos e indirectos en la salud física y mental, incluyendo la aparición de nuevas enfermedades, riesgos por olas de calor o eventos meteorológicos extremos, y el aumento de la morbilidad y mortalidad relacionadas con el clima. También se incluyen los impactos en la salud mental como la ecoansiedad y la solastalgia.
+- Resiliencia del Sector Salud: Es fundamental incrementar la capacidad del sector salud para anticiparse, prepararse, responder y recuperarse de los impactos del cambio climático. Esto incluye la resiliencia climática de los servicios de salud.
+- Estrategias de Adaptación: Se necesitan estrategias para abordar los riesgos climáticos en el sector salud, mejorar la vigilancia epidemiológica, y reducir la vulnerabilidad de las comunidades, especialmente las más vulnerables.
+- Determinantes de la Salud: La salud está intrínsecamente ligada a los determinantes sociales y ambientales, los cuales también se ven afectados por el cambio climático. Se plantea la necesidad de considerar estos determinantes como un eje transversal.
+- Vigilancia Epidemiológica: Es crucial contar con sistemas de vigilancia epidemiológica robustos que permitan monitorear, analizar y alertar sobre los efectos en la salud asociados al cambio climático, incluyendo temperaturas extremas, enfermedades vectoriales, enfermedades transmitidas por el agua y los alimentos, y otros eventos hidro-meteorológicos extremos. Se sugiere ampliar la vigilancia más allá de la mortalidad para incluir hospitalizaciones y consultas de urgencia.
+- Intersectorialidad: La salud en el contexto del cambio climático requiere una coordinación y colaboración intersectorial con áreas como recursos hídricos, seguridad alimentaria, infraestructura, medio ambiente, educación y otros.
+- Capacitación y Concientización: Es importante la capacitación del personal de salud para la detección y manejo de enfermedades exacerbadas por el clima, así como para abordar los impactos en la salud mental relacionados con el cambio climático. También se menciona la necesidad de educación social y cívica sobre resiliencia.
+- Investigación Científica: Existe una necesidad de fortalecer la investigación científica en temas de clima y salud en Chile para comprender mejor los impactos y desarrollar respuestas efectivas.
+- Enfoque Ampliado de la Salud: Se plantea la necesidad de avanzar hacia una mirada más amplia de la salud, incorporando perspectivas ecológicas y considerando la salud planetaria.
+En resumen, la 'Salud' en el contexto del cambio climático es un área prioritaria que demanda atención y acción coordinada para proteger a la población de los crecientes riesgos e impactos, fortaleciendo la resiliencia del sistema de salud y promoviendo el bienestar físico y mental en un clima cambiante.
 
-- M9) Potenciar la valorización de residuos orgánicos en el país, llegando a un 30% al 2030 mediante la aprobación del proyecto de ley actualmente en trámite. 
-- M10) Reducir cantidad residuos generados por pérdida y desperdicio de alimentos.
+Contribución en Adaptación: 
+- A1) Evaluación del impacto, del riesgo y de la vulnerabilidad, la planificación, la implementación y el monitoreo, evaluación y aprendizaje. Esto incluye varios compromisos, como la implementación del Plan Nacional de Adaptación al Cambio Climático 2025-2028 a 2030, la implementación de los 12 Planes Sectoriales de Adaptación a 2030, la evaluación de estos planes a 2030, contar con un inventario nacional de impactos del cambio climático a 2028, que los planes sectoriales actualizados cuenten con estándares transversales sobre grupos vulnerables, género, SbN y reducción del riesgo de desastres a 2031, contar con indicadores de seguimiento y resultado y con índices de resiliencia climática, implementar un registro de acciones de adaptación de actores no gubernamentales a 2025, mecanismos de cooperación público-privada, un reporte público-privado de evaluaciones de riesgo climático a 2035, la implementación de la Política Nacional para la Reducción del Riesgo de Desastres 2019-2030 a 2030, y una evaluación sobre el avance en sistemas de alerta temprana a 2030. 
+- A3) Aumentar la resiliencia del sector Salud frente a las consecuencias del cambio climático, promover la resiliencia climática de los servicios de salud y avanzar en reducir significativamente la morbilidad y mortalidad relacionadas con el clima, especialmente en las comunidades más vulnerables a 2030. Esto incluye una evaluación de riesgos climáticos en el sector salud a 2029 y una plataforma del sistema de vigilancia epidemiológica nacional sobre efectos en salud asociados al cambio climático a 2030. 
 
 \n\n### Instrucción:\nCon base en el contenido del conjunto de comentarios, identifica el **tema principal** que los articula. El nombre asignado debe:\n- Ser **específico**, **relevante** y **distinto**.\n- Ser **útil para agrupar recomendaciones de política pública climática**.\n- Tener **máximo 10 palabras** y no repetir expresiones genéricas como 'medio ambiente' o 'territorio'.
 \n\n Devuelve el título de la temática y su descripción, en base estrictamente a los comentarios entregados. Solo debe haber un nombre de temática y una definición por este conjunto de comentarios. La salida debe estar en el formato:  
@@ -427,7 +430,7 @@ Posteriormente, al construir la tabla resumen desde el punto de vista de las tax
 
 
 // Crear resúmenes temáticos para una mesa específica (definida manualmente) (a partir de los comentarios en primer, segundo y tercer lugar)
-WITH "Mesa 4 - Economía Circular" AS nombreMesa
+WITH "Mesa 6 - Salud" AS nombreMesa
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
@@ -465,7 +468,7 @@ RETURN
 
 
 // Crear o actualizar resumen general para una mesa, usando contexto y resúmenes temáticos
-WITH "Mesa 4 - Economía Circular" AS nombreMesa
+WITH "Mesa 6 - Salud" AS nombreMesa
 
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
@@ -534,7 +537,7 @@ RETURN
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
-WITH "Mesa 4 - Economía Circular" AS nombreMesa
+WITH "Mesa 6 - Salud" AS nombreMesa
 MATCH (t:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
@@ -583,7 +586,7 @@ RETURN
   t.recomendacionesGPT AS `Recomendación generada`;
 
 // Paso 7_B - Mostrar tabla final con subcapítulo incluido
-WITH "Mesa 4 - Economía Circular" AS nombreMesa
+WITH "Mesa 6 - Salud" AS nombreMesa
 MATCH (ndc:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
