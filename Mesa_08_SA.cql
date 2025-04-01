@@ -427,7 +427,7 @@ Posteriormente, al construir la tabla resumen desde el punto de vista de las tax
 
 
 // Crear resúmenes temáticos para una mesa específica (definida manualmente) (a partir de los comentarios en primer, segundo y tercer lugar)
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 8 - Seguridad Alimentaria" AS nombreMesa
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
@@ -459,7 +459,7 @@ RETURN
 
 
 // Crear o actualizar resumen general para una mesa, usando contexto y resúmenes temáticos
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 8 - Seguridad Alimentaria" AS nombreMesa
 
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
@@ -530,7 +530,7 @@ RETURN
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 8 - Seguridad Alimentaria" AS nombreMesa
 MATCH (t:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
@@ -578,7 +578,7 @@ RETURN
   t.recomendacionesGPT AS `Recomendación generada`;
 
 // Paso 7_B - Mostrar tabla final con subcapítulo incluido
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 8 - Seguridad Alimentaria" AS nombreMesa
 MATCH (ndc:TaxonomiaNDC)<-[r:RELATES_TO_NDC]-(c:Comentario),
       (m:MesaContexto {nombre: nombreMesa})
 WHERE r.score IS NOT NULL
