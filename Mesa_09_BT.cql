@@ -104,7 +104,7 @@ CALL apoc.periodic.iterate(
   "
   MATCH (c2:Comentario) WHERE c2.embedding IS NOT NULL AND id(c2) > id(c1)
   WITH c1, c2, gds.similarity.cosine(c1.embedding, c2.embedding) AS similarity
-  WHERE similarity > 0.83 // puedes ajustar este umbral
+  WHERE similarity > 0.8 // puedes ajustar este umbral
   MERGE (c1)-[r:SIMILAR_TO]-(c2)
   SET r.score = similarity
   ",
@@ -146,8 +146,8 @@ LIMIT 20;
 
 MATCH (c:Comentario)
 WHERE c.comunidadEmergente IS NOT NULL
-WITH c.comunidadEmergente[1] AS comunidadNivel1, collect("- " + c.comentarioReescrito) AS lista
-WITH comunidadNivel1, apoc.text.join(lista, "\n") AS texto
+WITH c.comunidadEmergente[0] AS comunidad, collect("- " + c.comentarioReescrito) AS lista
+WITH comunidad, apoc.text.join(lista, "\n") AS texto
 
 CALL apoc.ml.openai.chat(
   [
@@ -155,25 +155,33 @@ CALL apoc.ml.openai.chat(
       role: 'system',
       content: "Actúa como un investigador experto en análisis cualitativo y políticas públicas en el contexto de cambio climático. Tu tarea es asignar un **nombre temático claro y conciso** y una definición a este conjunto de comentarios reescritos.\n\n Contexto:\nResumen detallado de lo trabajado en la mesa y el detalle del documento NDC referido a esta mesa
 
-Mesa Transición Energética
-La 'transición energética' se define como el proceso fundamental de transformación del sistema energético actual, que se basa predominantemente en combustibles fósiles, hacia un sistema con bajas o nulas emisiones de gases de efecto invernadero (GEI) y una mayor capacidad de adaptación a los impactos del cambio climático. Este proceso es crucial para alcanzar los objetivos del Acuerdo de París, que busca limitar el aumento de la temperatura media mundial muy por debajo de 2 °C, e idealmente a 1,5 °C, con respecto a los niveles preindustriales.
-En el contexto de Chile, la transición energética implica los siguientes aspectos principales:
-• Desplazamiento progresivo de la generación de energía a partir de combustibles fósiles, como el carbón, hacia fuentes de energías renovables no convencionales (ERNC) como la solar, eólica e hidroeléctrica. Chile tiene como objetivo cerrar o reconvertir todas sus centrales a carbón para 2040 y ya cuenta con una proporción significativa de su electricidad generada por ERNC.
-• Fomento y desarrollo de nuevos vectores energéticos y tecnologías bajas en carbono, destacándose el hidrógeno verde por su potencial para descarbonizar sectores de alta intensidad energética como el transporte pesado y la industria. También se consideran otros combustibles alternativos y tecnologías de captura y utilización de carbono.
-• Implementación de medidas para aumentar la eficiencia en el uso de la energía en diversos sectores, incluyendo la industria, el transporte y la edificación. Esto se refleja en el establecimiento de metas de eficiencia energética y la discusión sobre la necesidad de mejorar el aislamiento térmico de viviendas.
-• Promoción de un cambio modal en el sector transporte, incentivando el uso de medios de transporte con menores emisiones, como el transporte público eléctrico, el ferrocarril y el transporte marítimo bajo en emisiones.
-• Reconocimiento de la interdependencia con otros sectores, como la necesidad de considerar los impactos ambientales del desarrollo de energías renovables, la relación con la economía circular en la valorización de residuos, y la conexión con el uso del suelo y la biodiversidad.
-• Marco regulatorio y planificación a diferentes niveles de gobierno, a través de la Ley Marco de Cambio Climático (LMCC), que establece la necesidad de elaborar planes sectoriales y territoriales de mitigación para alcanzar la carbono neutralidad al 2050.
-La transición energética no es solo un cambio tecnológico, sino que también implica consideraciones económicas, sociales y ambientales, así como la necesidad de inversión, desarrollo de capacidades y marcos regulatorios adecuados. Los 'Diálogos científicos por la acción climática de Chile 2025' buscaron precisamente recabar insumos científicos para enriquecer la planificación y ejecución de esta transición en el país.
-## 4. COMPONENTE DE MITIGACIÓN
-- Meta de neutralidad a 2050: presupuesto de emisiones, planes sectoriales.
+Se puede definir Bosques y Turberas en el contexto del cambio climático como ecosistemas terrestres y de humedales de gran importancia para la mitigación y adaptación al cambio climático en Chile, debido a su capacidad para capturar y almacenar grandes cantidades de carbono, además de proveer diversos servicios ecosistémicos.
+Una definición más detallada comprendería los siguientes aspectos:
+Bosques:
+- Los bosques en Chile cubren una superficie significativa del territorio nacional, representando un 23,8% a 2023, con 18.056.618 hectáreas, de las cuales 14.739.009 hectáreas corresponden a bosque nativo (81,62%) y 3.121.969 hectáreas a plantaciones forestales (17,37%).
+- Esta superficie forestal juega un rol de primer orden en la contención del aumento de la temperatura media del planeta al tener una alta capacidad de captura de carbono, siendo responsable actualmente de la mitad del compromiso de carbono neutralidad de Chile a 2050.
+- Además de la captura de carbono, los bosques proporcionan múltiples roles como la mitigación de daños y la reducción de deslizamientos de tierra, la preservación de la biodiversidad, beneficios para el bienestar de las personas (salud, identidad, espiritualidad, equilibrio emocional), y beneficios culturales, económicos y de turismo, conocidos como servicios ecosistémicos. Estos servicios también incluyen la protección de suelos, agua, fauna y valor paisajístico.
+- Los bosques en Chile se ven amenazados por el aumento en la frecuencia y magnitud de los incendios forestales, lo que requiere un manejo sostenible para disminuir la superficie afectada y prevenir condiciones que potencien su vulnerabilidad.
+- La Estrategia Nacional de Cambio Climático y Recursos Vegetacionales (ENCCRV) 2017-2025 es un instrumento clave para enfrentar el cambio climático, la desertificación, la degradación de las tierras y la sequía mediante la gestión de los recursos vegetacionales, buscando evitar o disminuir la deforestación y degradación de bosques nativos y fomentar su recuperación, forestación, revegetación y manejo sustentable.
+- Chile se ha comprometido al manejo sustentable y recuperación de 200.000 hectáreas de bosques nativos y a forestar 200.000 hectáreas, con un enfoque en especies nativas y suelos de aptitud preferentemente forestal o áreas prioritarias de conservación. También se busca reducir las emisiones del sector forestal por degradación y deforestación del bosque nativo en un 25% a 2030.
+Turberas:
+- Las turberas son un tipo de ecosistema de humedal reconocido por su gran capacidad para capturar y almacenar grandes cantidades de carbono.
+- Además de la captura de carbono, las turberas proporcionan servicios ecosistémicos relacionados a la adaptación al cambio climático, como el filtrado y mantención de la calidad del agua, regulación del flujo de agua, reducción de inundaciones y regulación de temperaturas.
+- Se estima que en Chile existen entre 18 mil y 30 mil ecosistemas de humedales (incluyendo turberas) con una superficie cercana a 5,6 millones de hectáreas, representando casi un 7,3% del territorio nacional.
+- Las turberas se encuentran altamente amenazadas por el cambio de uso de suelo, la explotación no sustentable, la expansión urbana y los efectos del cambio climático, lo que pone en riesgo su sustentabilidad a largo plazo.
+- Chile ha avanzado en la protección de turberas con la promulgación de la Ley N° 21.660 sobre Protección Ambiental de las Turberas, que busca protegerlas y conservarlas como reservas estratégicas para la mitigación y adaptación al cambio climático.
+- El país se ha comprometido a generar y sistematizar información sobre el uso y gestión de ecosistemas de turberas y humedales para integrarlos en los inventarios nacionales de gases de efecto invernadero, estableciendo criterios y prácticas para su restauración y conservación.
+En conjunto, 'Bosques y Turberas' representan componentes cruciales de la estrategia de Chile para abordar el cambio climático, tanto por su rol en la remoción de gases de efecto invernadero como por su contribución a la resiliencia de los ecosistemas y las comunidades a través de los diversos servicios que proveen. Su manejo sostenible, conservación y restauración son prioridades dentro de la actualización de la Contribución Determinada a Nivel Nacional (NDC) de Chile.
 
-### Contribuciones:
-- **M1**: Presupuesto 2020-2030: ≤1.100 MtCO2eq. 2031-2035: ≤490 MtCO2eq.
-- **M2**: 7 Planes Sectoriales.
-- **M3**: Cambio modal en transporte.
-- **M4**: Huella Chile: 20% de emisiones reportadas.
-- **M5**: Meta eficiencia energética a 2035.
+Contribución en Integración: 
+- I1) Chile se compromete al manejo sustentable y recuperación de 200.000 hectáreas de bosques nativos, representando capturas de GEI de alrededor de 0,9 a 1,2 MtCO2eq anuales al año 2030. Adicionalmente, se compromete a aumentar las hectáreas bajo manejo sustentable en 10.000 hectáreas anuales en promedio desde 2031. 
+- I2) Forestar 200.000 hectáreas, de las cuales al menos 100.000 hectáreas corresponden a cubierta forestal permanente, con al menos 70.000 hectáreas con especies nativas, representando capturas de entre 3,0 a 3,4 MtCO2eq anuales a 2030. Adicionalmente, se compromete a aumentar las hectáreas forestadas en 5.000 hectáreas anuales en promedio desde 2031. 
+- I3) Reducir las emisiones del sector forestal por degradación y deforestación del bosque nativo en un 25% a 2030. Adicionalmente, se fortalecerán las capacidades comunitarias para la prevención de incendios forestales a 2030. 
+- I4) Promover la construcción en madera. 
+- I5) Para asegurar el cumplimiento y seguimiento anual de estos compromisos se utilizará la Estrategia Nacional de Recursos Vegetacionales y Cambio Climático y otros instrumentos sectoriales apropiados.
+- I6) A más tardar a 2035, se habrá generado y sistematizado información sobre el uso y la gestión de ecosistemas de turberas y humedales incluidos en el Inventario Nacional de Humedales. 
+*   a) A 2026, se habrán establecidos los criterios y las prácticas para la restauración y conservación de turberas. 
+*   b) A 2030, se contará con métricas estandarizadas para la evaluación de la capacidad de adaptación o mitigación al cambio climático de humedales. 
 \n\n### Instrucción:\nCon base en el contenido del conjunto de comentarios, identifica el **tema principal** que los articula. El nombre asignado debe:\n- Ser **específico**, **relevante** y **distinto**.\n- Ser **útil para agrupar recomendaciones de política pública climática**.\n- Tener **máximo 10 palabras** y no repetir expresiones genéricas como 'medio ambiente' o 'territorio'.
 \n\n Devuelve el título de la temática y su descripción, en base estrictamente a los comentarios entregados. Solo debe haber un nombre de temática y una definición por este conjunto de comentarios. La salida debe estar en el formato:  
 Título Temática; Descripción
@@ -191,8 +199,10 @@ Ejemplos:
   {model: 'gpt-4o-mini'}
 ) YIELD value
 
-RETURN comunidadNivel1 AS comunidadID, value.choices[0].message.content AS nombreTematicaSugerida;
-
+RETURN 
+  comunidad AS comunidadID, 
+  value.choices[0].message.content AS nombreTematicaSugerida, 
+  texto AS comentariosUtilizados;
 
 // Cargar temáticas de la mesa con descripción (particular de cada mesa)
 :auto CALL {
@@ -301,6 +311,8 @@ WITH t, collect("- " + c.comentarioReescrito) AS comentarios
 SET t.comentariosCompilados = apoc.text.join(comentarios, "\n")
 RETURN t.titulo, t.comentariosCompilados
 
+
+/// Método TopDown desde los textos//////
 
 // Crear narrativa enriquecida (comentario más temática principal) sin sobrescribir la original (común para todas las mesas)
 MATCH (c:Comentario)-[r:RELATES_TO_THEME]->(t:Tematica)
