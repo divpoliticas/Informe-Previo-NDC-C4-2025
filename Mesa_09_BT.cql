@@ -304,11 +304,12 @@ RETURN
   top_scores[2] AS scoret3
 
 
-// compilar comentarios como una propiedad de temática (común para todas las mesas)
+// compilar comentarios como una propiedad de temática, cada vez que dicha temática fue rank 1 en ese comentario (común para todas las mesas)
 
-MATCH (t:Tematica)<-[:RELATES_TO_THEME]-(c:Comentario)
-WITH t, collect("- " + c.comentarioReescrito) AS comentarios
-SET t.comentariosCompilados = apoc.text.join(comentarios, "\n")
+MATCH (t:Tematica)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank = 1
+WITH t, collect("- " + c.comentarioReescrito) AS comentariosRank1
+SET t.comentariosCompilados = apoc.text.join(comentariosRank1, "\n")
 RETURN t.titulo, t.comentariosCompilados
 
 
@@ -514,183 +515,6 @@ RETURN
 
 
 
-// ETAPA 1: Crear relaciones entre comentarios basadas en similitud
-CALL apoc.periodic.iterate(
-  "
-  MATCH (c1:Comentario) WHERE c1.embedding IS NOT NULL
-  RETURN c1
-  ",
-  "
-  MATCH (c2:Comentario) WHERE c2.embedding IS NOT NULL AND id(c2) > id(c1)
-  WITH c1, c2, gds.similarity.cosine(c1.embedding, c2.embedding) AS similarity
-  WHERE similarity > 0.80 // puedes ajustar el umbral
-  MERGE (c1)-[r:SIMILAR_TO]-(c2)
-  SET r.score = similarity
-  ",
-  {batchSize: 100, parallel: false}
-);
-
-// ETAPA 2: Crear proyección GDS sobre Comentario
-
-CALL gds.graph.project(
-  'commentSimilarityGraph',
-  'Comentario',
-  {
-    SIMILAR_TO: {
-      type: 'SIMILAR_TO',
-      properties: ['score']
-    }
-  }
-);
-
-// ETAPA 3: Detectar comunidades emergentes (Louvain)
-CALL gds.louvain.write('commentSimilarityGraph', {
-  writeProperty: 'comunidadEmergente'
-});
-
-// ETAPA 4: Ver comentarios por comunidad
-MATCH (c:Comentario)
-WITH c.comunidadEmergente AS comunidad, collect(c.comentarioReescrito) AS comentarios
-RETURN comunidad, comentarios
-ORDER BY size(comentarios) DESC
-LIMIT 10;
-
-
-// ETAPA 5 (opcional): Nombrar automáticamente la comunidad
-MATCH (c:Comentario)
-WHERE c.comunidadEmergente IS NOT NULL
-WITH c.comunidadEmergente AS comunidad, collect("- " + c.comentarioReescrito) AS lista
-WITH comunidad, apoc.text.join(lista, "\n") AS texto
-
-CALL apoc.ml.openai.chat(
-  [
-    {
-      role: 'system',
-      content: "Actúa como un investigador en políticas públicas. A partir del siguiente conjunto de comentarios reescritos, propón un título claro y conciso para describir el tema principal que emerge del conjunto. Usa un máximo de 10 palabras."
-    },
-    {
-      role: 'user',
-      content: texto
-    }
-  ],
-  $apiKey,
-  {model: 'gpt-4o-mini'}
-) YIELD value
-
-RETURN comunidad, value.choices[0].message.content AS nombreSugerido
-
-//Borrar para volver a comenzar
-MATCH ()-[r:SIMILAR_TO]-()
-DELETE r;
-
-MATCH (c:Comentario)
-REMOVE c.comunidadEmergente;
-
-CALL gds.graph.exists('commentSimilarityGraph') YIELD exists
-WITH exists
-CALL apoc.do.when(
-  exists,
-  'CALL gds.graph.drop("commentSimilarityGraph", false)',
-  '',
-  {}
-) YIELD value
-RETURN "Grafo eliminado (si existía)";
-
-
-// Usando Leiden
-
-// ETAPA 1: Crear relaciones entre comentarios basadas en similitud
-CALL apoc.periodic.iterate(
-  "
-  MATCH (c1:Comentario) WHERE c1.embedding IS NOT NULL
-  RETURN c1
-  ",
-  "
-  MATCH (c2:Comentario) WHERE c2.embedding IS NOT NULL AND id(c2) > id(c1)
-  WITH c1, c2, gds.similarity.cosine(c1.embedding, c2.embedding) AS similarity
-  WHERE similarity > 0.83 // puedes ajustar este umbral
-  MERGE (c1)-[r:SIMILAR_TO]-(c2)
-  SET r.score = similarity
-  ",
-  {batchSize: 100, parallel: false}
-);
-
-//ETAPA 2: Crear proyección GDS sobre Comentario
-CALL gds.graph.project(
-  'commentSimilarityGraph',
-  'Comentario',
-  {
-    SIMILAR_TO: {
-      type: 'SIMILAR_TO',
-      orientation: 'UNDIRECTED',
-      properties: ['score']
-    }
-  }
-);
-
-// ETAPA 3: Detectar comunidades emergentes con Leiden y comunidades intermedias
-
-CALL gds.leiden.write('commentSimilarityGraph', {
-  writeProperty: 'comunidadEmergente',
-  includeIntermediateCommunities: true
-});
-
-
-// ETAPA 4: Revisar comunidades intermedias y finales
-
-// Ver comentarios agrupados por nivel 0
-MATCH (c:Comentario)
-WHERE c.comunidadEmergente IS NOT NULL
-WITH c.comunidadEmergente[0] AS comunidadNivel0, collect(c.comentarioReescrito) AS comentarios
-RETURN comunidadNivel0 AS Comunidad, comentarios
-ORDER BY size(comentarios) DESC
-LIMIT 20;
-
-// ETAPA 5 (actualizada): Nombrar automáticamente la comunidad usando nivel 0 de Leiden
-
-MATCH (c:Comentario)
-WHERE c.comunidadEmergente IS NOT NULL
-WITH c.comunidadEmergente[0] AS comunidadNivel0, collect("- " + c.comentarioReescrito) AS lista
-WITH comunidadNivel0, apoc.text.join(lista, "\n") AS texto
-
-CALL apoc.ml.openai.chat(
-  [
-    {
-      role: 'system',
-      content: "Actúa como un investigador experto en análisis cualitativo y políticas públicas en el contexto de cambio climático. Tu tarea es asignar un **nombre temático claro y conciso** y una definición a este conjunto de comentarios reescritos.\n\n Contexto:\nResumen detallado de lo trabajado en la mesa y el detalle del documento NDC referido a esta mesa
-
-Mesa Transición Socioecológica Justa
-La 'Transición Socioecológica Justa' se refiere a un proceso que busca la transformación de la sociedad hacia un modelo resiliente y equitativo, capaz de enfrentar las crisis sociales, ecológicas y climáticas. Este proceso reconoce la estrecha interrelación entre los sistemas sociales y ecológicos y la manera en que los impactos del cambio climático exacerban las desigualdades estructurales preexistentes en el territorio y entre los grupos sociales, afectando de manera desproporcionada a comunidades vulnerables, pueblos indígenas, mujeres, niños y personas mayores.
-La 'Transición Socioecológica Justa' implica un reenfoque del desarrollo económico que aborda las inequidades sociales, económicas y ambientales de un país, buscando resguardar los ecosistemas y el bienestar de las personas. Es un proceso que se lleva a cabo a través del diálogo social y el empoderamiento colectivo, y requiere la incorporación de enfoques de género, intercultural y territorial en todas las iniciativas de adaptación y mitigación al cambio climático, con el objetivo de disminuir y superar las desigualdades.
-Este concepto abarca componentes sociales, económicos, institucionales y ecológicos. En el marco de este proceso, es vital resguardar el trabajo decente, la seguridad laboral y el nivel de vida, asegurando que las acciones de adaptación y mitigación protejan el empleo y/o ayuden a su reconversión, fomentando la transformación sostenible del sistema productivo.
-La gestión del cambio climático, en el contexto de una 'Transición Socioecológica Justa', debe considerar una justa asignación de cargas, costos y beneficios, protegiendo a los ecosistemas vulnerables y resguardando los derechos humanos, el derecho al desarrollo de las generaciones presentes y futuras, y la salud y el bienestar integral de la población. Además, busca priorizar la eliminación de las brechas sociales preexistentes y las cargas ambientales históricas.
-La implementación de la Estrategia Nacional de Transición Socioecológica Justa (ENTSEJ) 2025-2035 busca guiar a Chile hacia una sociedad sostenible, baja en carbono, consciente con el medio ambiente y resiliente, asegurando la aplicación de los enfoques de derechos humanos, enfoque territorial, la igualdad de género y el trabajo decente en la transición. Sin embargo, se ha señalado que el enfoque actual podría estar extremadamente centrado en lo laboral, dejando de lado otros elementos importantes como el capital ambiental y cultural de los territorios y la identidad comunitaria. También se ha destacado la importancia de considerar un sistema de gobernanza que se haga cargo de múltiples dimensiones como el desarrollo de oportunidades económicas, desarrollo humano, protección ambiental, justicia climática, gobernanza democrática y buena administración.
-
-## 3. PILAR SOCIAL DE TRANSICIÓN SOCIOECOLÓGICA JUSTA
-- Impactos climáticos acentúan desigualdades.
-- ENTSEJ orienta la transición justa: enfoque territorial, de género, derechos humanos.
-- Pilar Social 2020 evoluciona a Pilar de Transición Socioecológica Justa.
-- Políticas deben generar co-beneficios.
-
-### Compromisos:
-- **PTSEJ1**: Implementar ENTSEJ 2025-2035.
-- **PTSEJ2**: Metodología de transición laboral justa a 2028.
-- **PTSEJ3**: Medida laboral en planes sectoriales a 2035.
-- **PTSEJ4**: Evaluación IGCC con indicadores sociales a 2029.
-- **PTSEJ5**: PACCC de territorios en transición incluirán ENTSEJ a 2026.
-\n\n### Instrucción:\nCon base en el contenido del conjunto de comentarios, identifica el **tema principal** que los articula. El nombre asignado debe:\n- Ser **específico**, **relevante** y **distinto**.\n- Ser **útil para agrupar recomendaciones de política pública climática**.\n- Tener **máximo 10 palabras** y no repetir expresiones genéricas como 'medio ambiente' o 'territorio'.\n\nDevuelve el título de la temática y su descripción, en base estrictamente a los comentarios entregados. Solo debe haber un nombre de temática y una definición por este conjunto de comentarios \n\nEjemplos:\n| N° | Título Temática                                            | Descripción                                                                                                                                                         |\n|----|------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 1  | Reconversiones laborales y capacitación en la transición climática | Se refiere a la necesidad de formar y recapacitar a trabajadores para enfrentar los cambios estructurales que implica la descarbonización, asegurando empleos dignos y sostenibles en nuevas áreas productivas. |\n| 2  | Calidad y coherencia en los instrumentos subnacionales     | Aborda la preocupación por la repetición y escasa efectividad de los planes regionales y comunales, destacando la urgencia de fortalecer su diseño, pertinencia territorial y base empírica. |"
-    },
-    {
-      role: 'user',
-      content: texto
-    }
-  ],
-  $apiKey,
-  {model: 'gpt-4o-mini'}
-) YIELD value
-
-RETURN comunidadNivel0 AS comunidadID, value.choices[0].message.content AS nombreTematicaSugerida;
-
 
 // ETAPA 6: Generar recomendaciones estructuradas por temática, usando comentariosCompilados
 
@@ -779,21 +603,6 @@ RETURN
   t.titulo AS `Temática`,
   t.recomendacionesGPT AS `Recomendaciones generadas`,
   t.comentariosCompilados AS `Comentarios utilizados`;
-
-CALL apoc.ml.openai.chat(
-  [
-    {
-      role: 'system',
-      content: "Actúa como un investigador en ciencias sociales especializado en sistematización de talleres participativos. Tu tarea es analizar un conjunto de comentarios reescritos agrupados por similitud temática y generar **exactamente 2 recomendaciones científicas**, orientadas a mejorar o complementar el anteproyecto de la NDC 2025 de Chile.\n\n---\n### Contexto:\n" + m.contexto + "\n\n### Instrucción:\nCada recomendación debe derivarse del contenido de los comentarios y el contexto. No generes una recomendación por cada comentario, sino que agrupa ideas afines.\n\nCada recomendación debe seguir esta estructura exacta:\n\n[Context & Problem Statement] → [Scientific Evidence Summary] → [Detailed Recommendations] → [Implementation Considerations] → [Conclusion & Urgency]\n\n- Cada recomendación debe estar escrita **en una sola línea**, sin saltos de línea ni subtítulos internos.\n- **Separa las dos recomendaciones con punto y coma (;)**, y no agregues ningún texto adicional fuera de ellas.\n- No repitas los comentarios ni copies secciones del contexto.\n\nFormato de salida:\nUna línea por recomendación, separadas por punto y coma. Ejemplo:\n\nIndicadores diferenciados de justicia climática: [Context] La NDC actual no incluye indicadores con sensibilidad territorial… → [Evidence] Estudios de gobernanza… → [Recommendation] Incluir un sistema nacional de… → [Implementation] Definir antes de 2027… → [Conclusion] Esto es clave para la transición justa; Coherencia en planes subnacionales: [Context] Se identifican inconsistencias… → [Evidence] Revisión de casos… → [Recommendation] Unificar lineamientos… → [Implementation] Incluir monitoreo… → [Conclusion] Mejora la eficacia territorial."
-    },
-    {
-      role: 'user',
-      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(t.comentariosCompilados, "\n", " ")
-    }
-  ],
-  $apiKey,
-  {model: 'gpt-4o-mini'}
-)
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
