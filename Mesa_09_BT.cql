@@ -439,14 +439,19 @@ Posteriormente, al construir la tabla resumen desde el punto de vista de las tax
 
 
 // Crear resúmenes temáticos para una mesa específica (definida manualmente) (a partir de los comentarios en primer, segundo y tercer lugar)
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 9 - Bosques y Turberas" AS nombreMesa
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
 MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL 
-  AND t.mesa = nombreMesa
-  AND m.contexto IS NOT NULL
+WHERE t.mesa = nombreMesa
+
+// Filtrar solo los comentarios donde esta temática fue la más relevante (rank = 1)
+MATCH (t)<-[r:RELATES_TO_THEME {rank: 1}]-(c:Comentario)
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -456,7 +461,7 @@ CALL apoc.ml.openai.chat(
     },
     {
       role: 'user',
-      content: "Temática: " + t.titulo + "; Comentarios: " + apoc.text.replace(t.comentariosCompilados, "\n", " ")
+      content: "Temática: " + t.titulo + "; Comentarios: " + apoc.text.replace(textoComentarios, "\n", " ")
     }
   ],
   $apiKey,
@@ -464,14 +469,15 @@ CALL apoc.ml.openai.chat(
 ) YIELD value
 
 SET t.resumenTematicoGPT = value.choices[0].message.content
+
 RETURN 
   t.titulo AS Temática,
   t.resumenTematicoGPT AS Resumen,
-  t.comentariosCompilados AS `Comentarios utilizados`;
+  textoComentarios AS `Comentarios utilizados`;
 
 
 // Crear o actualizar resumen general para una mesa, usando contexto y resúmenes temáticos
-WITH "Mesa 2 - Transición Energética" AS nombreMesa
+WITH "Mesa 9 - Bosques y Turberas" AS nombreMesa
 
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
