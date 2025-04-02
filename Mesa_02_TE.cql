@@ -104,7 +104,7 @@ CALL apoc.periodic.iterate(
   "
   MATCH (c2:Comentario) WHERE c2.embedding IS NOT NULL AND id(c2) > id(c1)
   WITH c1, c2, gds.similarity.cosine(c1.embedding, c2.embedding) AS similarity
-  WHERE similarity > 0.83 // puedes ajustar este umbral
+  WHERE similarity > 0.8 // puedes ajustar este umbral
   MERGE (c1)-[r:SIMILAR_TO]-(c2)
   SET r.score = similarity
   ",
@@ -432,9 +432,15 @@ MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
 MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL 
-  AND t.mesa = nombreMesa
-  AND m.contexto IS NOT NULL
+WHERE t.mesa = nombreMesa
+
+// Filtrar solo los comentarios donde esta temática fue la más relevante (rank = 1)
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -496,13 +502,22 @@ RETURN
 
 
 // ETAPA 6 - Generar recomendaciones estructuradas por temática con contexto de la mesa
-MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL
+WITH "Mesa 2 - Transición Energética" AS nombreMesa
 
-MATCH (m:MesaContexto {nombre: t.mesa})
+MATCH (t:Tematica)
+WHERE t.mesa = nombreMesa
+
+MATCH (m:MesaContexto {nombre: nombreMesa})
 WHERE m.contexto IS NOT NULL
 
-WITH t, m
+// Traer solo comentarios donde esta temática fue rank 1 o 2
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
+
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -512,7 +527,7 @@ CALL apoc.ml.openai.chat(
     },
     {
       role: 'user',
-      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(t.comentariosCompilados, "\n", " ")
+      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(textoComentarios, "\n", " ")
     }
   ],
   $apiKey,
@@ -524,7 +539,7 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.titulo AS `Temática`,
   t.recomendacionesGPT AS `Recomendaciones generadas`,
-  t.comentariosCompilados AS `Comentarios utilizados`;
+  textoComentarios AS `Comentarios utilizados`;
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
@@ -571,6 +586,7 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.ID AS `ID NDC`,
   t.capitulo AS `Capítulo`,
+  t.subtitulo AS `Subcapítulo`,
   t.texto AS `Texto NDC`,
   comentariosConcatenados AS `Comentarios utilizados`,
   t.recomendacionesGPT AS `Recomendación generada`;
