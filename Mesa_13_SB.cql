@@ -157,42 +157,42 @@ CALL apoc.ml.openai.chat(
 
 Se puede definir el Componente Subnacional en el contexto de la acción climática en Chile como el conjunto de esfuerzos, instrumentos de gestión, capacidades institucionales y mecanismos de gobernanza multinivel que se implementan a nivel regional y local (comunal) para abordar los impactos del cambio climático y fortalecer la resiliencia de las comunidades y los territorios. Este componente reconoce que los impactos del cambio climático se manifiestan fundamentalmente en los territorios, haciendo esencial la acción a estos niveles.
 Una definición más detallada comprendería los siguientes aspectos:
-• Niveles de Acción: El Componente Subnacional opera principalmente en dos niveles:
-◦ Regional: A través de los Planes de Acción Regional al Cambio Climático (PARCC), cuya elaboración está a cargo de los Comités Regionales de Cambio Climático (CORECC). Estos planes buscan colaborar en la gestión del cambio climático a nivel regional, en concordancia con la Estrategia Climática de Largo Plazo y los Planes Sectoriales de Mitigación y Adaptación, así como los Planes Estratégicos de Recursos Hídricos de Cuencas, cuando existan.
-◦ Local (Comunal): A través de los Planes de Acción Comunal al Cambio Climático (PACCC), cuya elaboración deben realizar las municipalidades. Estos planes deben ser consistentes con las directrices generales establecidas en la Estrategia Climática de Largo Plazo y en los planes de acción regional de cambio climático.
-• Instrumentos de Gestión: El Componente Subnacional se articula a través de diversos instrumentos de gestión definidos en la Ley Marco de Cambio Climático (LMCC), incluyendo:
-◦ Planes de Acción Regional al Cambio Climático (PARCC).
-◦ Planes de Acción Comunal al Cambio Climático (PACCC).
-◦ Planes Estratégicos de Recursos Hídricos en Cuencas, destinados a contribuir con la gestión hídrica, identificar brechas de agua, establecer balances hídricos, diagnosticar información sobre recursos hídricos y proponer acciones frente a los efectos del cambio climático.
-◦ Planes Regionales de Reducción del Riesgo de Desastres, los cuales deben incorporar acciones de adaptación al cambio climático.
-◦ Planes de descontaminación y/o prevención atmosférica, que deben contribuir a la reducción de Gases de Efecto Invernadero (GEI).
-◦ Instrumentos para la Gestión de Riesgos de Desastres, que deben incorporar criterios de adaptación al cambio climático en todas sus fases.
-• Objetivos Principales: El fortalecimiento del Componente Subnacional busca alcanzar varios objetivos clave:
-◦ Fortalecer la resiliencia de las comunidades y los territorios locales frente a los impactos del cambio climático.
-◦ Potenciar la cooperación con los gobiernos subnacionales en la planificación, financiamiento, implementación y monitoreo de las estrategias climáticas nacionales. Esto se refleja en la incorporación de Chile a la Coalition for High Ambition Multilevel Partnerships (CHAMP).
-◦ Avanzar en la implementación de acciones de adaptación y mitigación a nivel regional y local.
-◦ Mejorar la gestión hídrica y resguardar la seguridad hídrica.
-◦ Incorporar la adaptación al cambio climático en la gestión del riesgo de desastres.
-◦ Contribuir a la reducción de GEI a través de planes de descontaminación y prevención atmosférica.
-• Actores Clave y Gobernanza: La implementación del Componente Subnacional involucra a diversos actores y un sistema de gobernanza multinivel, que incluye:
-◦ Comités Regionales de Cambio Climático (CORECC), encargados de la planificación e implementación de acciones a nivel regional, en colaboración con el nivel central, las municipalidades y otros actores no estatales y subnacionales.
-◦ Municipalidades, responsables de la elaboración de los PACCC.
-◦ El nivel central del gobierno.
-◦ Otros actores no-estatales y subnacionales.
-◦ Se ha establecido una red de articulación de financiamiento climático subnacional a través del Grupo de Acción para el Financiamiento Climático Comunal y Regional.
-• Capacidades y Financiamiento: Se reconoce la importancia del fortalecimiento de capacidades y la formación de una gobernanza multinivel. Chile se compromete a fortalecer las capacidades y la institucionalidad de cambio climático a nivel regional, mediante un programa de formación técnica e institucional para los gobiernos regionales en áreas de cambio climático, gestión de riesgos y financiamiento climático. También se busca contar con una red activa de financiamiento climático subnacional. Sin embargo, se ha reconocido que las capacidades de los municipios son altamente desiguales, lo que impactará en los resultados.
-• Interconexiones y Desafíos: El trabajo subnacional requiere crear capacidades y tiene un vínculo clave con la reducción del riesgo de desastres a nivel local. Es importante considerar las asimetrías de poder y las particularidades de cada territorio al implementar soluciones y propuestas. Existe la preocupación por la "inflación" de planes genéricos con capacidad de implementación desigual. También se señala la necesidad de mecanismos de gobernanza que permitan una implementación más transversal de la política a todos los niveles.
+- Niveles de Acción: El Componente Subnacional opera principalmente en dos niveles:
+ - Regional: A través de los Planes de Acción Regional al Cambio Climático (PARCC), cuya elaboración está a cargo de los Comités Regionales de Cambio Climático (CORECC). Estos planes buscan colaborar en la gestión del cambio climático a nivel regional, en concordancia con la Estrategia Climática de Largo Plazo y los Planes Sectoriales de Mitigación y Adaptación, así como los Planes Estratégicos de Recursos Hídricos de Cuencas, cuando existan.
+ - Local (Comunal): A través de los Planes de Acción Comunal al Cambio Climático (PACCC), cuya elaboración deben realizar las municipalidades. Estos planes deben ser consistentes con las directrices generales establecidas en la Estrategia Climática de Largo Plazo y en los planes de acción regional de cambio climático.
+- Instrumentos de Gestión: El Componente Subnacional se articula a través de diversos instrumentos de gestión definidos en la Ley Marco de Cambio Climático (LMCC), incluyendo:
+ - Planes de Acción Regional al Cambio Climático (PARCC).
+ - Planes de Acción Comunal al Cambio Climático (PACCC).
+ - Planes Estratégicos de Recursos Hídricos en Cuencas, destinados a contribuir con la gestión hídrica, identificar brechas de agua, establecer balances hídricos, diagnosticar información sobre recursos hídricos y proponer acciones frente a los efectos del cambio climático.
+ - Planes Regionales de Reducción del Riesgo de Desastres, los cuales deben incorporar acciones de adaptación al cambio climático.
+ - Planes de descontaminación y/o prevención atmosférica, que deben contribuir a la reducción de Gases de Efecto Invernadero (GEI).
+ - Instrumentos para la Gestión de Riesgos de Desastres, que deben incorporar criterios de adaptación al cambio climático en todas sus fases.
+- Objetivos Principales: El fortalecimiento del Componente Subnacional busca alcanzar varios objetivos clave:
+ - Fortalecer la resiliencia de las comunidades y los territorios locales frente a los impactos del cambio climático.
+ - Potenciar la cooperación con los gobiernos subnacionales en la planificación, financiamiento, implementación y monitoreo de las estrategias climáticas nacionales. Esto se refleja en la incorporación de Chile a la Coalition for High Ambition Multilevel Partnerships (CHAMP).
+ - Avanzar en la implementación de acciones de adaptación y mitigación a nivel regional y local.
+ - Mejorar la gestión hídrica y resguardar la seguridad hídrica.
+ - Incorporar la adaptación al cambio climático en la gestión del riesgo de desastres.
+ - Contribuir a la reducción de GEI a través de planes de descontaminación y prevención atmosférica.
+- Actores Clave y Gobernanza: La implementación del Componente Subnacional involucra a diversos actores y un sistema de gobernanza multinivel, que incluye:
+ - Comités Regionales de Cambio Climático (CORECC), encargados de la planificación e implementación de acciones a nivel regional, en colaboración con el nivel central, las municipalidades y otros actores no estatales y subnacionales.
+ - Municipalidades, responsables de la elaboración de los PACCC.
+ - El nivel central del gobierno.
+ - Otros actores no-estatales y subnacionales.
+ - Se ha establecido una red de articulación de financiamiento climático subnacional a través del Grupo de Acción para el Financiamiento Climático Comunal y Regional.
+- Capacidades y Financiamiento: Se reconoce la importancia del fortalecimiento de capacidades y la formación de una gobernanza multinivel. Chile se compromete a fortalecer las capacidades y la institucionalidad de cambio climático a nivel regional, mediante un programa de formación técnica e institucional para los gobiernos regionales en áreas de cambio climático, gestión de riesgos y financiamiento climático. También se busca contar con una red activa de financiamiento climático subnacional. Sin embargo, se ha reconocido que las capacidades de los municipios son altamente desiguales, lo que impactará en los resultados.
+- Interconexiones y Desafíos: El trabajo subnacional requiere crear capacidades y tiene un vínculo clave con la reducción del riesgo de desastres a nivel local. Es importante considerar las asimetrías de poder y las particularidades de cada territorio al implementar soluciones y propuestas. Existe la preocupación por la 'inflación' de planes genéricos con capacidad de implementación desigual. También se señala la necesidad de mecanismos de gobernanza que permitan una implementación más transversal de la política a todos los niveles.
 En resumen, el Componente Subnacional es un pilar fundamental de la estrategia climática de Chile, buscando descentralizar la acción y construir resiliencia desde los territorios a través de la planificación, la colaboración multinivel, el fortalecimiento de capacidades y la implementación de instrumentos de gestión específicos a nivel regional y local.
 
 Contribución en Componente Subnacional: 
-◦ SN1) A 2026, se habrán fortalecido las capacidades y la institucionalidad de cambio climático a nivel regional; se habrá finalizado la elaboración de los PARCC; se habrá iniciado la implementación de acciones en las 16 regiones. 
-◦ SN2) Desde 2026, todas las regiones del país que actualicen los Planes Regionales de Reducción del Riesgo de Desastres habrán incorporado acciones de adaptación al cambio climático. 
-◦ SN3) Desde 2026, los planes de descontaminación y/o prevención atmosférica deberán contribuir a la reducción de GEI. 
-◦ SN4) A 2026, se habrán elaborado Planes de Acción Comunal de Cambio Climático en todas las comunas del país. 
-◦ SN5) A 2026, Chile contará con una red de articulación de financiamiento climático subnacional activa. 
-◦ SN6) A 2030, se habrán elaborado Planes Estratégicos de Cuenca para Gestión de Recursos Hídricos en 101 cuencas del país. 
-◦ SN7) A 2030, el Ministerio del Medio Ambiente elaborará una herramienta comunal de Huella Chile. 
-◦ SN8) Chile fortalecerá la generación de capacidades subnacionales mediante la creación de un programa de formación técnica e institucional.
+ - SN1) A 2026, se habrán fortalecido las capacidades y la institucionalidad de cambio climático a nivel regional; se habrá finalizado la elaboración de los PARCC; se habrá iniciado la implementación de acciones en las 16 regiones. 
+ - SN2) Desde 2026, todas las regiones del país que actualicen los Planes Regionales de Reducción del Riesgo de Desastres habrán incorporado acciones de adaptación al cambio climático. 
+ - SN3) Desde 2026, los planes de descontaminación y/o prevención atmosférica deberán contribuir a la reducción de GEI. 
+ - SN4) A 2026, se habrán elaborado Planes de Acción Comunal de Cambio Climático en todas las comunas del país. 
+ - SN5) A 2026, Chile contará con una red de articulación de financiamiento climático subnacional activa. 
+ - SN6) A 2030, se habrán elaborado Planes Estratégicos de Cuenca para Gestión de Recursos Hídricos en 101 cuencas del país. 
+ - SN7) A 2030, el Ministerio del Medio Ambiente elaborará una herramienta comunal de Huella Chile. 
+ - SN8) Chile fortalecerá la generación de capacidades subnacionales mediante la creación de un programa de formación técnica e institucional.
   
 \n\n### Instrucción:\nCon base en el contenido del conjunto de comentarios, identifica el **tema principal** que los articula. El nombre asignado debe:\n- Ser **específico**, **relevante** y **distinto**.\n- Ser **útil para agrupar recomendaciones de política pública climática**.\n- Tener **máximo 10 palabras** y no repetir expresiones genéricas como 'medio ambiente' o 'territorio'.
 \n\n Devuelve el título de la temática y su descripción, en base estrictamente a los comentarios entregados. Solo debe haber un nombre de temática y una definición por este conjunto de comentarios. La salida debe estar en el formato:  
