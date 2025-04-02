@@ -191,7 +191,10 @@ Ejemplos:
   {model: 'gpt-4o-mini'}
 ) YIELD value
 
-RETURN comunidadNivel1 AS comunidadID, value.choices[0].message.content AS nombreTematicaSugerida;
+RETURN 
+  comunidad AS comunidadID, 
+  value.choices[0].message.content AS nombreTematicaSugerida, 
+  texto AS comentariosUtilizados;
 
 
 // Cargar temáticas de la mesa con descripción (particular de cada mesa)
