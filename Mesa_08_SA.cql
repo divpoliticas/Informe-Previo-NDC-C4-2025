@@ -170,6 +170,7 @@ En resumen, la seguridad alimentaria en el contexto del cambio climático en Chi
 Contribución en Adaptación: 
 - A1) Evaluación del impacto, del riesgo y de la vulnerabilidad, la planificación, la implementación y el monitoreo, evaluación y aprendizaje. Esto incluye varios compromisos, como la implementación del Plan Nacional de Adaptación al Cambio Climático 2025-2028 a 2030, la implementación de los 12 Planes Sectoriales de Adaptación a 2030, la evaluación de estos planes a 2030, contar con un inventario nacional de impactos del cambio climático a 2028, que los planes sectoriales actualizados cuenten con estándares transversales sobre grupos vulnerables, género, SbN y reducción del riesgo de desastres a 2031, contar con indicadores de seguimiento y resultado y con índices de resiliencia climática, implementar un registro de acciones de adaptación de actores no gubernamentales a 2025, mecanismos de cooperación público-privada, un reporte público-privado de evaluaciones de riesgo climático a 2035, la implementación de la Política Nacional para la Reducción del Riesgo de Desastres 2019-2030 a 2030, y una evaluación sobre el avance en sistemas de alerta temprana a 2030. 
 - A6) A 2035, Chile logrará un avance sustantivo en la producción agrícola y de alimentos de la pesca y acuicultura resilientes al clima, así como en el suministro y la distribución de alimentos, aumentando la producción con prácticas sustentables.
+
 \n\n### Instrucción:\nCon base en el contenido del conjunto de comentarios, identifica el **tema principal** que los articula. El nombre asignado debe:\n- Ser **específico**, **relevante** y **distinto**.\n- Ser **útil para agrupar recomendaciones de política pública climática**.\n- Tener **máximo 10 palabras** y no repetir expresiones genéricas como 'medio ambiente' o 'territorio'.
 \n\n Devuelve el título de la temática y su descripción, en base estrictamente a los comentarios entregados. Solo debe haber un nombre de temática y una definición por este conjunto de comentarios. La salida debe estar en el formato:  
 Título Temática; Descripción
@@ -194,7 +195,7 @@ RETURN
 
 // Cargar temáticas de la mesa con descripción (particular de cada mesa)
 :auto CALL {
-  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTCM_2Lv_14je9hgzoiYFEoocvqiVBmnSVQ9BKRwOx3Iti9tnF0kaXHnyk6XMcNzaRN3yjvOGzlb51j/pub?gid=1254384515&single=true&output=csv" AS row
+  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-NQeO7fq0GKL6e6xF6u5aQ-jANSRM5zpY4KseTCsCpRKI4toJpRd9AnsnwE035oM-bAUaWTPKA1fX/pub?gid=955385612&single=true&output=csv" AS row
   FIELDTERMINATOR ','
   CREATE (t:Tematica)
   SET t.titulo = row.`Título Temática`,
@@ -292,11 +293,12 @@ RETURN
   top_scores[2] AS scoret3
 
 
-// compilar comentarios como una propiedad de temática (común para todas las mesas)
+// compilar comentarios como una propiedad de temática, cada vez que dicha temática fue rank 1 en ese comentario (común para todas las mesas)
 
-MATCH (t:Tematica)<-[:RELATES_TO_THEME]-(c:Comentario)
-WITH t, collect("- " + c.comentarioReescrito) AS comentarios
-SET t.comentariosCompilados = apoc.text.join(comentarios, "\n")
+MATCH (t:Tematica)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank = 1
+WITH t, collect("- " + c.comentarioReescrito) AS comentariosRank1
+SET t.comentariosCompilados = apoc.text.join(comentariosRank1, "\n")
 RETURN t.titulo, t.comentariosCompilados
 
 
@@ -432,9 +434,15 @@ MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
 MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL 
-  AND t.mesa = nombreMesa
-  AND m.contexto IS NOT NULL
+WHERE t.mesa = nombreMesa
+
+// Filtrar solo los comentarios donde esta temática fue la más relevante (rank = 1)
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -444,7 +452,7 @@ CALL apoc.ml.openai.chat(
     },
     {
       role: 'user',
-      content: "Temática: " + t.titulo + "; Comentarios: " + apoc.text.replace(t.comentariosCompilados, "\n", " ")
+      content: "Temática: " + t.titulo + "; Comentarios: " + apoc.text.replace(textoComentarios, "\n", " ")
     }
   ],
   $apiKey,
@@ -452,10 +460,11 @@ CALL apoc.ml.openai.chat(
 ) YIELD value
 
 SET t.resumenTematicoGPT = value.choices[0].message.content
+
 RETURN 
   t.titulo AS Temática,
   t.resumenTematicoGPT AS Resumen,
-  t.comentariosCompilados AS `Comentarios utilizados`;
+  textoComentarios AS `Comentarios utilizados`;
 
 
 // Crear o actualizar resumen general para una mesa, usando contexto y resúmenes temáticos
@@ -494,17 +503,23 @@ RETURN
   r.texto AS `Resumen generado`,
   r.actualizado AS `Fecha actualización`;
 
-
-
-
 // ETAPA 6 - Generar recomendaciones estructuradas por temática con contexto de la mesa
-MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL
+WITH "Mesa 8 - Seguridad Alimentaria" AS nombreMesa
 
-MATCH (m:MesaContexto {nombre: t.mesa})
+MATCH (t:Tematica)
+WHERE t.mesa = nombreMesa
+
+MATCH (m:MesaContexto {nombre: nombreMesa})
 WHERE m.contexto IS NOT NULL
 
-WITH t, m
+// Traer solo comentarios donde esta temática fue rank 1
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
+
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -514,7 +529,7 @@ CALL apoc.ml.openai.chat(
     },
     {
       role: 'user',
-      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(t.comentariosCompilados, "\n", " ")
+      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(textoComentarios, "\n", " ")
     }
   ],
   $apiKey,
@@ -526,7 +541,7 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.titulo AS `Temática`,
   t.recomendacionesGPT AS `Recomendaciones generadas`,
-  t.comentariosCompilados AS `Comentarios utilizados`;
+  textoComentarios AS `Comentarios utilizados`;
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
@@ -548,7 +563,7 @@ CALL apoc.ml.openai.chat(
       role: 'system',
       content: "Actúa como un investigador en ciencias sociales especializado en sistematización de talleres participativos.\n\n" +
                "### Contexto:\n\"" + m.contexto + "\"\n\n" +
-               "Tu tarea es analizar un conjunto de comentarios reescritos que se han identificado como altamente relacionados con un fragmento específico de la NDC 2025 de Chile. A partir de este conjunto de comentarios y del contenido del fragmento, debes generar una sola recomendación estructurada orientada a optimizar y complementar el fragmento de la NDC que se quiere comentar.\n\n" +
+               "Tu tarea es analizar un conjunto de comentarios reescritos que se han identificado como altamente relacionados con un fragmento específico de la NDC 2025 de Chile. A partir de este conjunto de comentarios y del contenido del fragmento de la NDC, debes generar una sola recomendación estructurada orientada a optimizar y complementar el fragmento de la NDC que se quiere comentar.\n\n" +
                "### Fragmento de la NDC:\n\"" + t.texto + "\"\n\n" +
                "Cada recomendación debe seguir esta estructura:\n\n" +
                "[Context & Problem Statement] → [Scientific Evidence Summary] → [Detailed Recommendations] → [Implementation Considerations] → [Conclusion & Urgency]\n\n" +
@@ -557,7 +572,7 @@ CALL apoc.ml.openai.chat(
                "[Detailed Recommendations] → Expone la propuesta específica que se sugiere implementar. Debe ser clara, factible y orientada a resultados, incluyendo el qué, cómo y para qué de la acción recomendada.\n\n" +
                "[Implementation Considerations] → Describe los aspectos clave para llevar a cabo la recomendación, como recursos necesarios, actores involucrados, plazos tentativos o posibles dificultades.\n\n" +
                "[Conclusion & Urgency] → Reafirma la importancia de la acción propuesta y su contribución al logro de los objetivos climáticos. Puede destacar beneficios esperados y los riesgos de no actuar a tiempo.\n\n" +
-               "No generes más de 1 recomendación por fragmento de la NDC. No repitas comentarios individuales ni copies el texto de la NDC. La recomendación debe basarse en el contenido combinado de los comentarios y estar alineada con el enfoque del fragmento presentado.\n\n" +
+               "No generes más de 1 recomendación por fragmento de la NDC. No repitas comentarios individuales ni copies el texto de la NDC. La recomendación debe basarse en el contenido combinado de los comentarios y estar orientada a abordar el fragmento de la NDC presentado.\n\n" +
                "### Formato de salida:\nUna recomendación estructurada. Debe estar redactada en una sola línea de texto."
     },
     {
@@ -573,6 +588,7 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.ID AS `ID NDC`,
   t.capitulo AS `Capítulo`,
+  t.subtitulo AS `Subcapítulo`,
   t.texto AS `Texto NDC`,
   comentariosConcatenados AS `Comentarios utilizados`,
   t.recomendacionesGPT AS `Recomendación generada`;
@@ -595,4 +611,3 @@ RETURN
   apoc.text.join(comentariosTop5, "\n") AS `Top 5 comentarios utilizados`,
   ndc.recomendacionesGPT AS `Recomendación generada`
 ORDER BY ndc.ID
-
