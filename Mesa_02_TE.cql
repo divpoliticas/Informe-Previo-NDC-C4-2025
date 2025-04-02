@@ -146,8 +146,8 @@ LIMIT 20;
 
 MATCH (c:Comentario)
 WHERE c.comunidadEmergente IS NOT NULL
-WITH c.comunidadEmergente[1] AS comunidadNivel1, collect("- " + c.comentarioReescrito) AS lista
-WITH comunidadNivel1, apoc.text.join(lista, "\n") AS texto
+WITH c.comunidadEmergente[0] AS comunidad, collect("- " + c.comentarioReescrito) AS lista
+WITH comunidad, apoc.text.join(lista, "\n") AS texto
 
 CALL apoc.ml.openai.chat(
   [
