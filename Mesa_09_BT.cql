@@ -514,65 +514,6 @@ RETURN
   r.actualizado AS `Fecha actualización`;
 
 
-
-
-// ETAPA 6: Generar recomendaciones estructuradas por temática, usando comentariosCompilados
-
-MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL
-
-CALL apoc.ml.openai.chat(
-  [
-    {
-      role: 'system',
-      content: "Actúa como un investigador en ciencias sociales especializado en sistematización de talleres participativos. Tu tarea es analizar un conjunto de comentarios reescritos agrupados por similitud temática, y generar recomendaciones estructuradas para el anteproyecto de la NDC 2025 de Chile.\n\n---\n### Contexto:\n Resumen detallado de lo trabajado en la mesa y el detalle del documento NDC referido a esta mesa
-
-Mesa Transición Socioecológica Justa
-La 'Transición Socioecológica Justa' se refiere a un proceso que busca la transformación de la sociedad hacia un modelo resiliente y equitativo, capaz de enfrentar las crisis sociales, ecológicas y climáticas. Este proceso reconoce la estrecha interrelación entre los sistemas sociales y ecológicos y la manera en que los impactos del cambio climático exacerban las desigualdades estructurales preexistentes en el territorio y entre los grupos sociales, afectando de manera desproporcionada a comunidades vulnerables, pueblos indígenas, mujeres, niños y personas mayores.
-La 'Transición Socioecológica Justa' implica un reenfoque del desarrollo económico que aborda las inequidades sociales, económicas y ambientales de un país, buscando resguardar los ecosistemas y el bienestar de las personas. Es un proceso que se lleva a cabo a través del diálogo social y el empoderamiento colectivo, y requiere la incorporación de enfoques de género, intercultural y territorial en todas las iniciativas de adaptación y mitigación al cambio climático, con el objetivo de disminuir y superar las desigualdades.
-Este concepto abarca componentes sociales, económicos, institucionales y ecológicos. En el marco de este proceso, es vital resguardar el trabajo decente, la seguridad laboral y el nivel de vida, asegurando que las acciones de adaptación y mitigación protejan el empleo y/o ayuden a su reconversión, fomentando la transformación sostenible del sistema productivo.
-La gestión del cambio climático, en el contexto de una 'Transición Socioecológica Justa', debe considerar una justa asignación de cargas, costos y beneficios, protegiendo a los ecosistemas vulnerables y resguardando los derechos humanos, el derecho al desarrollo de las generaciones presentes y futuras, y la salud y el bienestar integral de la población. Además, busca priorizar la eliminación de las brechas sociales preexistentes y las cargas ambientales históricas.
-La implementación de la Estrategia Nacional de Transición Socioecológica Justa (ENTSEJ) 2025-2035 busca guiar a Chile hacia una sociedad sostenible, baja en carbono, consciente con el medio ambiente y resiliente, asegurando la aplicación de los enfoques de derechos humanos, enfoque territorial, la igualdad de género y el trabajo decente en la transición. Sin embargo, se ha señalado que el enfoque actual podría estar extremadamente centrado en lo laboral, dejando de lado otros elementos importantes como el capital ambiental y cultural de los territorios y la identidad comunitaria. También se ha destacado la importancia de considerar un sistema de gobernanza que se haga cargo de múltiples dimensiones como el desarrollo de oportunidades económicas, desarrollo humano, protección ambiental, justicia climática, gobernanza democrática y buena administración.
-
-## 3. PILAR SOCIAL DE TRANSICIÓN SOCIOECOLÓGICA JUSTA
-- Impactos climáticos acentúan desigualdades.
-- ENTSEJ orienta la transición justa: enfoque territorial, de género, derechos humanos.
-- Pilar Social 2020 evoluciona a Pilar de Transición Socioecológica Justa.
-- Políticas deben generar co-beneficios.
-
-### Compromisos:
-- **PTSEJ1**: Implementar ENTSEJ 2025-2035.
-- **PTSEJ2**: Metodología de transición laboral justa a 2028.
-- **PTSEJ3**: Medida laboral en planes sectoriales a 2035.
-- **PTSEJ4**: Evaluación IGCC con indicadores sociales a 2029.
-- **PTSEJ5**: PACCC de territorios en transición incluirán ENTSEJ a 2026.
-\n\n---\n### Instrucción:\nAnaliza el conjunto de comentarios reescritos entregado a continuación. Identifica convergencias, énfasis o propuestas que surjan de su análisis conjunto.\n\nA partir de este análisis, genera **una o más recomendaciones científicas** orientadas a la formulación o mejora de políticas climáticas en el marco de la Transición Socioecológica Justa.\n\n- Cada recomendación debe seguir esta estructura:
-
-[Context & Problem Statement] → Presenta brevemente el problema o desafío de política pública que se busca abordar. Explica por qué es relevante en el marco de la NDC y qué brecha, riesgo o necesidad concreta refleja.
-
-[Scientific Evidence Summary] → Resume los hallazgos, argumentos o conocimientos científicos disponibles que fundamentan la recomendación. Puede incluir evidencias empíricas, estudios, marcos conceptuales o aprendizajes del proceso participativo.
-
-[Detailed Recommendations] → Expone la propuesta específica que se sugiere implementar. Debe ser clara, factible y orientada a resultados, incluyendo el qué, cómo y para qué de la acción recomendada.
-
-[Implementation Considerations] → Describe los aspectos clave para llevar a cabo la recomendación, como recursos necesarios, actores involucrados, plazos tentativos o posibles dificultades.
-
-[Conclusion & Urgency] → Reafirma la importancia de la acción propuesta y su contribución al logro de los objetivos climáticos. Puede destacar beneficios esperados y los riesgos de no actuar a tiempo.
-\n\n- No repitas los comentarios ni generes una recomendación por cada uno.\n- Agrupa comentarios solo si existe una lógica común entre ellos.\n- Puedes generar más de una recomendación por comunidad, pero no más de 3 recomendaciones por temática.\n\n### Formato de salida:\n Una lista de recomendaciones estructuradas, separadas por punto y coma (;). Cada recomendación debe incluir la temática sugerida y estar redactada en una única línea. No incluyas texto adicional fuera de la lista. Usa solo lo que se derive del contenido de los comentarios.\n\nEjemplo de formato esperado:\n\nIndicadores diferenciados de justicia climática: [Context] La NDC actual no incluye indicadores con sensibilidad territorial… → [Evidence] Estudios de gobernanza… → [Recommendation] Incluir un sistema nacional de… → [Implementation] Definir antes de 2027… → [Conclusion] Esto es clave para la transición justa;\n\nCoherencia en planes subnacionales: [Context] Se identifican inconsistencias en la formulación de PACCC regionales… → [Evidence] Revisión de casos en regiones piloto… → [Recommendation] Unificar lineamientos metodológicos… → [Implementation] Incluir monitoreo técnico desde MMA… → [Conclusion] Mejora la eficacia territorial de la NDC;"
-
-    },
-    {
-      role: 'user',
-      content: "Temática: " + t.titulo + "\nComentarios:\n" + t.comentariosCompilados
-    }
-  ],
-  $apiKey,
-  {model: 'gpt-4o-mini'}
-) YIELD value
-
-SET t.recomendacionesGPT = value.choices[0].message.content
-RETURN t.titulo AS Tematica, t.recomendacionesGPT AS Recomendaciones
-
-
 // ETAPA 6 - Generar recomendaciones estructuradas por temática con contexto de la mesa
 MATCH (t:Tematica)
 WHERE t.comentariosCompilados IS NOT NULL
