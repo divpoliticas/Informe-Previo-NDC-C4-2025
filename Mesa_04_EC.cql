@@ -427,7 +427,7 @@ Posteriormente, al construir la tabla resumen desde el punto de vista de las tax
 
 
 // Crear resúmenes temáticos para una mesa específica (definida manualmente) (a partir de los comentarios en primer, segundo y tercer lugar)
-WITH "Mesa 6 - Salud" AS nombreMesa
+WITH "Mesa 4 - Economía Circular" AS nombreMesa
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
 
@@ -466,7 +466,7 @@ RETURN
 
 
 // Crear o actualizar resumen general para una mesa, usando contexto y resúmenes temáticos
-WITH "Mesa 6 - Salud" AS nombreMesa
+WITH "Mesa 4 - Economía Circular" AS nombreMesa
 
 MATCH (m:MesaContexto {nombre: nombreMesa})
 WITH m, nombreMesa
@@ -502,7 +502,7 @@ RETURN
   r.actualizado AS `Fecha actualización`;
 
 // ETAPA 6 - Generar recomendaciones estructuradas por temática con contexto de la mesa
-WITH "Mesa 6 - Salud" AS nombreMesa
+WITH "Mesa 4 - Economía Circular" AS nombreMesa
 
 MATCH (t:Tematica)
 WHERE t.mesa = nombreMesa
