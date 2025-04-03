@@ -438,7 +438,8 @@ MATCH (t:Tematica)
 WHERE t.mesa = nombreMesa
 
 // Filtrar solo los comentarios donde esta temática fue la más relevante (rank = 1)
-MATCH (t)<-[r:RELATES_TO_THEME {rank: 1}]-(c:Comentario)
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
 WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
 WHERE size(comentariosFiltrados) > 0
 
