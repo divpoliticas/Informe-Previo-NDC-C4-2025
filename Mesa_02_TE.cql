@@ -305,6 +305,9 @@ SET t.comentariosCompilados = apoc.text.join(comentarios, "\n")
 RETURN t.titulo, t.comentariosCompilados
 
 
+/// Método TopDown desde los textos//////
+
+
 // Crear narrativa enriquecida (comentario más temática principal) sin sobrescribir la original (común para todas las mesas)
 MATCH (c:Comentario)-[r:RELATES_TO_THEME]->(t:Tematica)
 WHERE r.rank = 1
