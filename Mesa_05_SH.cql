@@ -197,7 +197,7 @@ RETURN
 
 // Cargar temáticas de la mesa con descripción (particular de cada mesa)
 :auto CALL {
-  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vRX0WlM_u0nI6VkZTf8GM6nxf2ZsERnqn4jDl9t-Ny6egA7jE76j41bqg8-ChXrQ9eTHf36e_PsZZ5w/pub?gid=1254384515&single=true&output=csv" AS row
+  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKgDFGZyR43fifkE7j9RwyLdojm9NAP5RbEXhmcBUT2mQvxilJSrgnSj4lvJrilVi9BaWJPMBaxYo4/pub?gid=1821860081&single=true&output=csv" AS row
   FIELDTERMINATOR ','
   CREATE (t:Tematica)
   SET t.titulo = row.`Título Temática`,
@@ -439,7 +439,8 @@ MATCH (t:Tematica)
 WHERE t.mesa = nombreMesa
 
 // Filtrar solo los comentarios donde esta temática fue la más relevante (rank = 1)
-MATCH (t)<-[r:RELATES_TO_THEME {rank: 1}]-(c:Comentario)
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
 WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
 WHERE size(comentariosFiltrados) > 0
 
@@ -504,15 +505,23 @@ RETURN
   r.texto AS `Resumen generado`,
   r.actualizado AS `Fecha actualización`;
 
-
 // ETAPA 6 - Generar recomendaciones estructuradas por temática con contexto de la mesa
-MATCH (t:Tematica)
-WHERE t.comentariosCompilados IS NOT NULL
+WITH "Mesa 5 - Seguridad Hídrica" AS nombreMesa
 
-MATCH (m:MesaContexto {nombre: t.mesa})
+MATCH (t:Tematica)
+WHERE t.mesa = nombreMesa
+
+MATCH (m:MesaContexto {nombre: nombreMesa})
 WHERE m.contexto IS NOT NULL
 
-WITH t, m
+// Traer solo comentarios donde esta temática fue rank 1
+MATCH (t)<-[r:RELATES_TO_THEME]-(c:Comentario)
+WHERE r.rank IN [1, 2]
+
+WITH t, m, collect("- " + c.comentarioReescrito) AS comentariosFiltrados
+WHERE size(comentariosFiltrados) > 0
+
+WITH t, m, apoc.text.join(comentariosFiltrados, "\n") AS textoComentarios
 
 CALL apoc.ml.openai.chat(
   [
@@ -522,7 +531,7 @@ CALL apoc.ml.openai.chat(
     },
     {
       role: 'user',
-      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(t.comentariosCompilados, "\n", " ")
+      content: "Temática: " + t.titulo + "\nComentarios:\n" + apoc.text.replace(textoComentarios, "\n", " ")
     }
   ],
   $apiKey,
@@ -534,7 +543,8 @@ SET t.recomendacionesGPT = value.choices[0].message.content
 RETURN 
   t.titulo AS `Temática`,
   t.recomendacionesGPT AS `Recomendaciones generadas`,
-  t.comentariosCompilados AS `Comentarios utilizados`;
+  textoComentarios AS `Comentarios utilizados`;
+
 
 
 // Etapa 7 - Recomendaciones con comentarios y contexto definidos manualmente
