@@ -196,7 +196,7 @@ RETURN
 
 // Cargar temáticas de la mesa con descripción (particular de cada mesa)
 :auto CALL {
-  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vRX0WlM_u0nI6VkZTf8GM6nxf2ZsERnqn4jDl9t-Ny6egA7jE76j41bqg8-ChXrQ9eTHf36e_PsZZ5w/pub?gid=1254384515&single=true&output=csv" AS row
+  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vT2_fuLFHxnaWUps2DjG96ZITXS5m4XdUap9R4HG66FxR-LtYydtsajJBLHUdcll3EgJ-DsTOkp8_5F/pub?gid=918152198&single=true&output=csv" AS row
   FIELDTERMINATOR ','
   CREATE (t:Tematica)
   SET t.titulo = row.`Título Temática`,
