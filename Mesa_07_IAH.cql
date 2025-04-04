@@ -85,7 +85,7 @@ CALL apoc.periodic.iterate(
 
 // Cargar nodos de contexto por mesa temática (común para todas las mesas)
 :auto CALL {
-  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTe60oQ54xn8fpl04BbfARboz-SyTV9qRkaTTrduhCH5MD8NaIjjmCzYsfvyD9xqBgbmCmMXTv23g8x/pub?gid=783164528&single=true&output=csv" AS row
+  LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgH80xR9b7i2gNejRrM0Hn5NVE4OADnUcDU19m3LFxRddByLc7y4aFRuPJQCdvb9oil8yRaursAJd9/pub?gid=1339276971&single=true&output=csv" AS row
   FIELDTERMINATOR ','
   CREATE (m:MesaContexto)
   SET m.nombre = row.Mesa,
