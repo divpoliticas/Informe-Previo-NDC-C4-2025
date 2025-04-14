@@ -6,7 +6,7 @@
 
 ---
 
-## 1. Motivación académica
+## 1. Contexto y propósito
 
 En el contexto de la actualización de la Contribución Determinada a Nivel Nacional (NDC 2025) de Chile el Comité Científico de Cambio Climático desarrolló instancias participativas a través de una convocatoria llamada "Diálogos científicos por la acción climática".  
 Para garantizar **trazabilidad analítica** y **coherencia discursiva** en los insumos producidos, se requería transformar comentarios heterogéneos en registros normalizados:
@@ -27,16 +27,52 @@ Este repositorio automatiza ambas tareas con ayuda de modelos de lenguaje avanza
 ## 2. Estructura del repositorio
 
 ```
-.
+mi_proyecto/
+├── insumos.md                  # ← único archivo con mesas + URLs + contextos
 ├── src/
-│   └── procesar_comentarios.py   # script principal
-├── prompts/
-│   └── bosques_turberas.md       # ejemplo de contexto específico
+│   └── procesar_comentarios.py
 ├── data/
-│   └── comentarios_procesados_<timestamp>.csv  # salidas generadas
+│   └── comentarios_procesados_<timestamp>.csv
 ├── requirements.txt
-└── README.md
+└── README.md                   # este archivo
 ```
+### 2.1 Formato de `insumos.md`
+
+Cada tema (mesa) se anota de la siguiente forma, uno debajo de otro:
+
+```markdown
+## Mesa: Bosques y Turberas
+CSV: https://docs.google.com/spreadsheets/d/…/export?format=csv
+
+<pegas aquí el BLOQUE DE CONTEXTO completo para esa mesa>
+
+---
+
+## Mesa: Transición Energética
+CSV: https://docs.google.com/spreadsheets/d/…/export?format=csv
+
+<otro bloque de contexto>
+
+---
+```
+
+- **`## Mesa:`** sirve como separador visible.  
+- **`CSV:`** debe ser el enlace público‑CSV de la pestaña correspondiente.  
+- Tras la línea `CSV:` pega **todo** el contexto que usarás en el prompt.
+
+## 2.2 Cómo usar `insumos.md` en la práctica
+
+1. **Abre** `insumos.md` y localiza la mesa que quieras procesar.  
+2. **Copia**:
+   - La URL después de `CSV:` → pégala en la variable `csv_url` de `procesar_comentarios.py`.
+   - Todo el bloque de contexto → pégalo en `prompt_sistema` (sustituyendo el anterior).  
+3. **Ejecuta** el script:
+
+   ```bash
+   python src/procesar_comentarios.py
+   ```
+
+4. **Repite** los pasos 1‑3 cada vez que cambies de mesa.
 
 ---
 
@@ -63,7 +99,7 @@ pip install -r requirements.txt
 |--------------------|------------------------------------------------------------|
 | `OPENAI_API_KEY`   | Clave secreta generada en la consola de OpenAI             |
 | `CSV_URL`          | Enlace **public‑CSV** de Google Sheets (ver Sección 6)     |
-| `OPENAI_MODEL`     | `gpt-4o` (por defecto) o `gpt-3.5-turbo` si prima la velocidad |
+| `OPENAI_MODEL`     | `gpt-4o-mini` (por defecto) o `gpt-3.5-turbo` |
 
 > **Seguridad**: nunca almacenes la clave en el código; usa un archivo `.env`
 > excluido por `.gitignore`.
@@ -88,11 +124,8 @@ El script:
 
 ## 6. Adaptación a nuevas temáticas
 
-1. Coloca el bloque de **contexto** (definiciones, compromisos, indicadores) en
-   `prompts/<tema>.md`.
-2. Declara `prompt_sistema = open('prompts/<tema>.md').read()` dentro del script.
-3. Ajusta `CSV_URL` para apuntar a la pestaña específica de Google Sheets que
-   contenga los comentarios de esa temática.  
+1. Coloca el bloque de **contexto** (definiciones, compromisos, indicadores) proveniente de `insumos.md`.
+2. Ajusta `CSV_URL` para apuntar a la pestaña específica de Google Sheets que contenga los comentarios de esa temática.  
    - Asegúrate de publicar la hoja como CSV (`Archivo ▸ Compartir ▸ Publicar en la web`).
 
 ---
@@ -117,27 +150,21 @@ El script:
 | `Comentario reescrito`       | Frase única, coherente y contextualizada                |
 | `Mesa`, `Area`, `Dialogo…`   | Metadatos heredados del CSV original                    |
 
-Los analistas pueden importar el CSV a R, Python o Neo4j para continuar con
-*topic modelling*, análisis de redes o dashboards de seguimiento.
+Los analistas pueden importar el CSV a R, Python o Neo4j para continuar con *topic modelling*, análisis de redes o dashboards de seguimiento.
 
 ---
 
 ## 9. Ética y limitaciones
 
-1. **Dependencia del modelo**: la clasificación es tan fiable como el _prompt_
-   y el modelo subyacente. Se recomienda muestreo manual para control de calidad.
-2. **Sesgo de contexto**: cada bloque temático debe revisarse por expertos
-   disciplinares para evitar interpretaciones sesgadas.
-3. **Privacidad**: si los comentarios incluyen datos personales, anonimiza antes
-   de procesar.
+1. **Dependencia del modelo**: la clasificación es tan fiable como el _prompt_ y el modelo subyacente. Se recomienda muestreo manual para control de calidad.
+2. **Sesgo de contexto**: cada bloque temático debe revisarse por expertos disciplinares para evitar interpretaciones sesgadas.
+3. **Privacidad**: si los comentarios incluyen datos personales, anonimiza antes de procesar.
 
 ---
 
 ## 10. Créditos y citación
 
-Este flujo fue diseñado por el equipo de investigación de la **Mesa de
-Sistematización Científica** en el marco del proyecto  
-«**Participación Experta para la NDC 2025**».  
+Este flujo fue diseñado por el equipo de la Secretaría Técnica del Comité Científico Asesor en el marco de los **Diálogos Científicos por la acción Climática 2025**».  
 Si usas este código o sus derivados, cita de la siguiente manera:
 
 > Morales, C. et al. (2025). *Pipeline de clasificación y reescritura de comentarios NDC 2025* [Software]. GitHub. <https://github.com/usuario/repositorio>
