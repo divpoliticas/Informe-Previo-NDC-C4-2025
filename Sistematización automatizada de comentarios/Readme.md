@@ -1,20 +1,15 @@
-# Sistematización Automatizada de Comentarios NDC 2025 🇨🇱
+# Sistematización Automatizada de Comentarios talleres de participación
 
 > **Resumen**  
-> Este proyecto implementa un flujo reproducible en Python que descarga comentarios cualitativos
-> desde una hoja de cálculo colaborativa, los contextualiza, y emplea la API de OpenAI para  
-> **clasificar** y **reescribir** cada aporte según criterios metodológicos explícitos.  
-> El resultado final es un CSV listo para análisis posteriores (p. ej. minería de texto, redes
-> semánticas o generación de recomendaciones de política pública).
+> Este proyecto implementa un flujo reproducible en Python que descarga comentarios cualitativos desde una hoja de cálculo colaborativa, los contextualiza, y emplea la API de OpenAI para **clasificar** y **reescribir** cada aporte según criterios metodológicos explícitos.  
+> El resultado final es un CSV listo para análisis posteriores (p. ej. minería de texto, redes semánticas o generación de recomendaciones de política pública).
 
 ---
 
 ## 1. Motivación académica
 
-La actualización de la Contribución Determinada a Nivel Nacional (NDC 2025) de Chile
-ha convocado diálogos participativos multi‑actor.  
-Para garantizar **trazabilidad analítica** y **coherencia discursiva** en los insumos
-producidos, necesitamos transformar comentarios heterogéneos en registros normalizados:
+En el contexto de la actualización de la Contribución Determinada a Nivel Nacional (NDC 2025) de Chile el Comité Científico de Cambio Climático desarrolló instancias participativas a través de una convocatoria llamada "Diálogos científicos por la acción climática".  
+Para garantizar **trazabilidad analítica** y **coherencia discursiva** en los insumos producidos, se requería transformar comentarios heterogéneos en registros normalizados:
 
 1. **Clasificación tipológica**  
    - 🟩 Aporte conceptual o estratégico  
@@ -23,12 +18,9 @@ producidos, necesitamos transformar comentarios heterogéneos en registros norma
    - ⬜ Fragmento insuficiente
 
 2. **Reescritura contextualizada**  
-   Cada comentario se convierte en una frase completa que preserva intención,
-   motivación y procedencia (mesa temática, área metodológica, instancia).
+   Cada comentario se convierte en una frase completa que preserva intención, motivación y procedencia (mesa temática, área metodológica, instancia).
 
-Este repositorio automatiza ambas tareas con ayuda de modelos de lenguaje avanzados,
-manteniendo control metodológico sobre _prompting_, _rate limiting_ y auditoría de
-resultados.
+Este repositorio automatiza ambas tareas con ayuda de modelos de lenguaje avanzados, manteniendo control metodológico sobre _prompting_, _rate limiting_ y auditoría de resultados.
 
 ---
 
