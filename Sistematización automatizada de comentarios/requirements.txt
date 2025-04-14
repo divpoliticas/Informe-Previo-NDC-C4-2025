@@ -1,0 +1,3 @@
+pandas>=2.2
+openai>=1.14
+python-dotenv>=1.0  # opcional: solo si usas .env para la clave API
