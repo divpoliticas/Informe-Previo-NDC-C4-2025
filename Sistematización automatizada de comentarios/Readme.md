@@ -65,7 +65,7 @@ CSV: https://docs.google.com/spreadsheets/d/…/export?format=csv
 1. **Abre** `insumos.md` y localiza la mesa que quieras procesar.  
 2. **Copia**:
    - La URL después de `CSV:` → pégala en la variable `csv_url` de `procesar_comentarios.py`.
-   - Todo el bloque de contexto → pégalo en `prompt_sistema` (sustituyendo el anterior).  
+   - Todo el bloque de contexto → pégalo en el lugar donde dice `--- CONTEXTO ---` dentro de `prompt_sistema`.
 3. **Ejecuta** el script:
 
    ```bash
@@ -164,10 +164,10 @@ Los analistas pueden importar el CSV a R, Python o Neo4j para continuar con *top
 
 ## 10. Créditos y citación
 
-Este flujo fue diseñado por el equipo de la Secretaría Técnica del Comité Científico Asesor en el marco de los **Diálogos Científicos por la acción Climática 2025**».  
+Este flujo fue diseñado por el equipo de la Secretaría Técnica del Comité Científico Asesor en el marco de los **Diálogos Científicos por la acción Climática 2025**.  
 Si usas este código o sus derivados, cita de la siguiente manera:
 
-> Morales, C. et al. (2025). *Pipeline de clasificación y reescritura de comentarios NDC 2025* [Software]. GitHub. <https://github.com/usuario/repositorio>
+> Morales, C. et al. (2025). *Pipeline de clasificación y reescritura de comentarios NDC 2025* [Software]. GitHub. [github.com/.../Sistematización automatizada de comentarios](https://github.com/divpoliticas/Informe-Previo-NDC-C4-2025/tree/main/Sistematizaci%C3%B3n%20automatizada%20de%20comentarios)
 
 ---
 
