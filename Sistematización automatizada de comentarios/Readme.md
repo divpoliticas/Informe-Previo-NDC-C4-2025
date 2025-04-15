@@ -11,16 +11,39 @@
 En el contexto de la actualización de la Contribución Determinada a Nivel Nacional (NDC 2025) de Chile el Comité Científico de Cambio Climático desarrolló instancias participativas a través de una convocatoria llamada "Diálogos científicos por la acción climática".  
 Para garantizar **trazabilidad analítica** y **coherencia discursiva** en los insumos producidos, se requería transformar comentarios heterogéneos en registros normalizados:
 
+Este flujo contempla dos etapas principales:
+
 1. **Clasificación tipológica**  
+Cada comentario crudo es clasificado según su naturaleza, lo que permite distinguir rápidamente si se trata de una propuesta estratégica, una observación técnica, una pregunta crítica o un fragmento no interpretable.  
+   Esto permite mapear el tipo de participación recogida, identificar vacíos y priorizar líneas de respuesta.
    - 🟩 Aporte conceptual o estratégico  
    - 🟦 Comentario operativo o técnico  
    - 🟧 Pregunta o punto crítico  
    - ⬜ Fragmento insuficiente
 
 2. **Reescritura contextualizada**  
-   Cada comentario se convierte en una frase completa que preserva intención, motivación y procedencia (mesa temática, área metodológica, instancia).
+Cada comentario se convierte en una frase completa que preserva intención, motivación y procedencia (mesa temática, área metodológica, instancia).
 
-Este repositorio automatiza ambas tareas con ayuda de modelos de lenguaje avanzados, manteniendo control metodológico sobre _prompting_, _rate limiting_ y auditoría de resultados.
+> Para guiar la interpretación y clasificación, cada mesa temática se acompaña de un **bloque de contexto específico**. Estos contextos han sido desarrollados con base en el anteproyecto NDC y otros insumos previos, como se detalla en la siguiente sección.
+
+La clasificación y reescritura de los comentarios se realiza mediante modelos de lenguaje avanzados (GPT), guiados por un *prompt* metodológicamente definido para cada mesa temática. Este prompt incorpora ejemplos, instrucciones claras y un bloque de contexto específico por mesa, lo que permite minimizar la variabilidad en los resultados y asegurar que cada comentario reescrito preserve su intención original, motivación y procedencia (mesa temática, área metodológica, instancia).
+
+Si bien el modelo introduce una dimensión de variabilidad inherente a los sistemas generativos, el diseño del flujo —que incluye control explícito sobre el prompting, uso de contextos estructurados, consistencia en el formato de salida, _rate limiting_ en el uso de la API, y validación mediante expresiones regulares— permite generar resultados reproducibles en su forma y propósito. Estas decisiones técnicas permiten mantener trazabilidad y control metodológico en todo el proceso.
+
+> ⚠️ Este proceso no reemplaza la validación humana: se espera que equipos expertos revisen y ajusten los resultados cuando sea necesario, ya sea por motivos técnicos, éticos o interpretativos.
+
+## 1.1 Origen y construcción de los contextos temáticos
+
+Los bloques de contexto utilizados en este flujo (ver `insumos.md`) fueron desarrollados a partir de una sistematización original del documento oficial del anteproyecto de la NDC 2025 de Chile. Esta sistematización fue organizada según las mesas temáticas definidas por el Comité Científico para los **Diálogos científicos por la acción climática**, e integra tres elementos principales:
+
+- **Agrupamiento metodológico de mesas**: se organizó el contenido según un criterio de coherencia temática y operativa, para facilitar su análisis posterior.
+- **Anteproyecto NDC 2025**: se extrajeron las definiciones y contribuciones pertinentes a cada mesa.
+- **Primeros comentarios emitidos** en las instancias virtuales: se incluyeron elementos emergentes que reflejan inquietudes tempranas desde los primeros talleres.
+
+El archivo `insumos.md` consolida esta información, vinculando cada bloque de contexto con su respectiva URL de comentarios en Google Sheets.
+
+> 📄 Documento fuente del anteproyecto: [descargar PDF](https://drive.google.com/file/d/1JaTLocgEdW8yamXtrzbxN7CeGW4bjS8x/view?usp=sharing)  
+> 📊 Contextos por mesa (CSV): [ver hoja](https://docs.google.com/spreadsheets/d/e/2PACX-1vQgH80xR9b7i2gNejRrM0Hn5NVE4OADnUcDU19m3LFxRddByLc7y4aFRuPJQCdvb9oil8yRaursAJd9/pub?gid=1339276971&single=true&output=csv)
 
 ---
 
@@ -137,7 +160,7 @@ El script:
 | **Trazabilidad**: se conserva el `ID` original y se añade el _timestamp_ al archivo de salida. | Facilita auditoría y replicabilidad. |
 | **Rate limiting** (`time.sleep(3)`) | Previene _throttling_ de la API y respeta fair use. |
 | **Extracción con `re`** | Permite validar la estructura de la respuesta y detectar anomalías. |
-| **Log de errores y re‑intentos** | Evita la pérdida silenciosa de filas; esencial en investigación cualitativa. |
+| **Log de errores y re‑intentos** | Evita la pérdida silenciosa de filas|
 
 ---
 
