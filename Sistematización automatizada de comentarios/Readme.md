@@ -24,13 +24,14 @@ Cada comentario crudo es clasificado según su naturaleza, lo que permite distin
 2. **Reescritura contextualizada**  
 Cada comentario se convierte en una frase completa que preserva intención, motivación y procedencia (mesa temática, área metodológica, instancia).
 
- > Para guiar la interpretación y clasificación, cada mesa temática se acompaña de un **bloque de contexto específico**. Estos contextos han sido desarrollados con base en el anteproyecto NDC y otros insumos previos, como se detalla en la siguiente sección.
+> Para guiar la interpretación y clasificación, cada mesa temática se acompaña de un **bloque de contexto específico**. Estos contextos han sido desarrollados con base en el anteproyecto NDC y otros insumos previos, como se detalla en la siguiente sección.
+
 
 La clasificación y reescritura de los comentarios se realiza mediante modelos de lenguaje avanzados (GPT), guiados por un *prompt* metodológicamente definido para cada mesa temática. Este prompt incorpora ejemplos, instrucciones claras y un bloque de contexto específico por mesa, lo que permite minimizar la variabilidad en los resultados y asegurar que cada comentario reescrito preserve su intención original, motivación y procedencia (mesa temática, área metodológica, instancia).
 
 Si bien el modelo introduce una dimensión de variabilidad inherente a los sistemas generativos, el diseño del flujo —que incluye control explícito sobre el prompting, uso de contextos estructurados, consistencia en el formato de salida, _rate limiting_ en el uso de la API, y validación mediante expresiones regulares— permite generar resultados reproducibles en su forma y propósito. Estas decisiones técnicas permiten mantener trazabilidad y control metodológico en todo el proceso.
 
-> ⚠️ Este proceso no reemplaza la validación humana: se espera que equipos expertos revisen y ajusten los resultados cuando sea necesario, ya sea por motivos técnicos, éticos o interpretativos.
+>> ⚠️ Este proceso no reemplaza la validación humana: se espera que equipos expertos revisen y ajusten los resultados cuando sea necesario, ya sea por motivos técnicos, éticos o interpretativos.
 
 ## 1.1 Origen y construcción de los contextos temáticos
 
