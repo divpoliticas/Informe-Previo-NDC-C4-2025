@@ -10,9 +10,10 @@ Este repositorio contiene el código, datos y scripts utilizados en dos grandes 
 
 ```
 Informe-Previo-NDC-C4-2025/
-├── Sistematización automatizada de comentarios/  ← Preprocesamiento y clasificación con GPT
-├── Análisis_comentarios-recomendaciones/    ← Búsqueda y agrupación temática con CQL (Cypher)
-└── README.md                                ← Este archivo
+├── Sistematización automatizada de comentarios/   ← Preprocesamiento y clasificación con GPT
+├── Análisis_comentarios-recomendaciones/         ← Agrupación temática y recomendaciones con Cypher
+├── Búsqueda_evidencia/                           ← Revisión de publicaciones científicas relacionadas a recomendaciones
+└── README.md                                     ← Este archivo
 ```
 
 ---
@@ -47,12 +48,28 @@ Ubicación: [`/Análisis_comentarios-recomendaciones`](./Análisis_comentarios-r
 
 Contiene archivos `.cql` con **consultas semánticas y de red** para su uso en **Neo4j**, que permiten:
 
-- Buscar publicaciones relevantes por mesa temática.
-- Agrupar comentarios procesados mediante embeddings.
-- Detectar similitudes temáticas y generar recomendaciones.
-- Explorar relaciones entre comentarios y temáticas.
+- Detectar similitudes entre comentarios usando embeddings.
+- Agrupar comentarios por comunidades temáticas emergentes.
+- Generar recomendaciones bottom-up y top-down con contexto metodológico.
+- Validar resultados con puntos de control experto.
 
-🔗 Ver detalle: `README` en construcción
+🔗 Ver detalle: [`README de análisis`](./Análisis_comentarios-recomendaciones/README.md)
+
+---
+
+### 📘 Búsqueda de evidencia científica para recomendaciones
+Ubicación: [`/Búsqueda_evidencia`](./Búsqueda_evidencia)
+
+Este componente permite realizar una búsqueda semántica de publicaciones científicas almacenadas localmente, con el objetivo de encontrar referencias relevantes que respalden cada recomendación generada en el análisis participativo.
+
+El flujo permite:
+
+- Generar un embedding de la recomendación.
+- Buscar las publicaciones más similares usando `cosine similarity`.
+- Clasificar el nivel de vinculación con ayuda de un modelo GPT.
+- Generar referencias bibliográficas en formato Harvard con enlace DOI.
+
+🔗 Ver detalle: [`README de búsqueda de evidencia`](./Búsqueda_evidencia/README.md)
 
 ---
 
@@ -80,6 +97,8 @@ Este trabajo fue desarrollado por el equipo de la Secretaría Técnica del Comit
 Si usas este repositorio o alguno de sus componentes en publicaciones, informes u otros desarrollos, cita de la siguiente manera:
 
 > Morales, C. et al. (2025). *Repositorio de análisis estructurado de comentarios NDC 2025* [Software]. Comité Científico de Cambio Climático. GitHub: [github.com/divpoliticas/Informe-Previo-NDC-C4-2025](https://github.com/divpoliticas/Informe-Previo-NDC-C4-2025)
+
+ > ✉️ Contacto: [Carlos Morales Quiroz] · [csmorales@minciencia.gob.cl]
 ---
 
 > ✉️ Contacto: [Tu nombre o equipo] · [correo institucional]
