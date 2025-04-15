@@ -24,7 +24,7 @@ Cada comentario crudo es clasificado según su naturaleza, lo que permite distin
 2. **Reescritura contextualizada**  
 Cada comentario se convierte en una frase completa que preserva intención, motivación y procedencia (mesa temática, área metodológica, instancia).
 
-> Para guiar la interpretación y clasificación, cada mesa temática se acompaña de un **bloque de contexto específico**. Estos contextos han sido desarrollados con base en el anteproyecto NDC y otros insumos previos, como se detalla en la siguiente sección.
+ > Para guiar la interpretación y clasificación, cada mesa temática se acompaña de un **bloque de contexto específico**. Estos contextos han sido desarrollados con base en el anteproyecto NDC y otros insumos previos, como se detalla en la siguiente sección.
 
 La clasificación y reescritura de los comentarios se realiza mediante modelos de lenguaje avanzados (GPT), guiados por un *prompt* metodológicamente definido para cada mesa temática. Este prompt incorpora ejemplos, instrucciones claras y un bloque de contexto específico por mesa, lo que permite minimizar la variabilidad en los resultados y asegurar que cada comentario reescrito preserve su intención original, motivación y procedencia (mesa temática, área metodológica, instancia).
 
