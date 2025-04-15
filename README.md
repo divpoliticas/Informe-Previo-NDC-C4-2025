@@ -100,5 +100,3 @@ Si usas este repositorio o alguno de sus componentes en publicaciones, informes 
 
  > ✉️ Contacto: [Carlos Morales Quiroz] · [csmorales@minciencia.gob.cl]
 ---
-
-> ✉️ Contacto: [Tu nombre o equipo] · [correo institucional]
