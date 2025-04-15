@@ -31,7 +31,7 @@ La clasificación y reescritura de los comentarios se realiza mediante modelos d
 
 Si bien el modelo introduce una dimensión de variabilidad inherente a los sistemas generativos, el diseño del flujo —que incluye control explícito sobre el prompting, uso de contextos estructurados, consistencia en el formato de salida, _rate limiting_ en el uso de la API, y validación mediante expresiones regulares— permite generar resultados reproducibles en su forma y propósito. Estas decisiones técnicas permiten mantener trazabilidad y control metodológico en todo el proceso.
 
->> ⚠️ Este proceso no reemplaza la validación humana: se espera que equipos expertos revisen y ajusten los resultados cuando sea necesario, ya sea por motivos técnicos, éticos o interpretativos.
+> ⚠️ Este proceso no reemplaza la validación humana: se espera que equipos expertos revisen y ajusten los resultados cuando sea necesario, ya sea por motivos técnicos, éticos o interpretativos.
 
 ## 1.1 Origen y construcción de los contextos temáticos
 
