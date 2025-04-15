@@ -75,4 +75,11 @@ Este trabajo fue desarrollado por el equipo de la Secretaría Técnica del Comit
 
 ---
 
+### 📚 5. Citación recomendada
+
+Si usas este repositorio o alguno de sus componentes en publicaciones, informes u otros desarrollos, cita de la siguiente manera:
+
+> Morales, C. et al. (2025). *Repositorio de análisis estructurado de comentarios NDC 2025* [Software]. Comité Científico de Cambio Climático. GitHub: [github.com/divpoliticas/Informe-Previo-NDC-C4-2025](https://github.com/divpoliticas/Informe-Previo-NDC-C4-2025)
+---
+
 > ✉️ Contacto: [Tu nombre o equipo] · [correo institucional]
