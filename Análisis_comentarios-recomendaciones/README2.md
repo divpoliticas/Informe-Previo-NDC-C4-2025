@@ -159,7 +159,7 @@ Las recomendaciones generadas automáticamente mediante enfoques bottom-up y top
 En esta etapa, el Comité:
 
 - Revisa críticamente cada recomendación generada por los modelos de lenguaje.
-- Ajusta redacciones, complementa evidencias y evalúa su factibilidad técnica y pertinencia política.
+- Ajusta redacciones, complementa evidencias y evalúa su redacción y pertinencia.
 - Prioriza las recomendaciones más relevantes de acuerdo con los objetivos del proceso participativo y los lineamientos de la NDC 2025.
 
 📌 *Resultado:* Solo las recomendaciones validadas y consolidadas por este segundo checkpoint son consideradas para la versión final del informe científico. Esta validación fortalece la calidad metodológica, asegura coherencia estratégica y refuerza la legitimidad técnica del análisis.
