@@ -145,11 +145,11 @@ CREATE (t:TaxonomiaNDC)
 SET t.ID = ..., t.texto = ..., t.capitulo = ..., ...
 ```
 
-Cada nodo `:TaxonomiaNDC` contiene el texto del fragmento, su contexto normativo, capítulo, subtítulo y un identificador único. Esto permite:
+Cada nodo `:TaxonomiaNDC` contiene el texto del fragmento, su contexto, capítulo, subtítulo y un identificador único. Esto permite:
 
-- Comparar fragmentos del anteproyecto con comentarios participativos mediante similitud semántica.
+- Comparar fragmentos del anteproyecto con comentarios mediante similitud semántica.
 - Relacionar comentarios con secciones específicas del texto base.
-- Generar recomendaciones para modificar o reforzar cada fragmento con evidencia participativa.
+- Generar recomendaciones para modificar o reforzar cada fragmento.
 
 📌 *Resultado:* Se estructura el texto de la NDC como una base consultable de fragmentos temáticos, alineada con los criterios de análisis semántico y trazabilidad metodológica.
 
