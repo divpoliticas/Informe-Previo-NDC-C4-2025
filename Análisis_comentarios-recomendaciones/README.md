@@ -136,6 +136,24 @@ A partir de la clasificación temática de los comentarios mediante embeddings y
 
 #### 🔹 9.2 Recomendaciones **top-down** (comparación con la NDC)
 
+##### Paso previo: carga estructurada del texto NDC
+
+Antes del análisis comparativo, el anteproyecto de la NDC 2025 es transformado en una **taxonomía de fragmentos temáticos**, donde cada entrada representa una unidad de análisis diferenciada (o “unidad hermenéutica”).
+
+```cypher
+CREATE (t:TaxonomiaNDC)
+SET t.ID = ..., t.texto = ..., t.capitulo = ..., ...
+```
+
+Cada nodo `:TaxonomiaNDC` contiene el texto del fragmento, su contexto normativo, capítulo, subtítulo y un identificador único. Esto permite:
+
+- Comparar fragmentos del anteproyecto con comentarios participativos mediante similitud semántica.
+- Relacionar comentarios con secciones específicas del texto base.
+- Generar recomendaciones para modificar o reforzar cada fragmento con evidencia participativa.
+
+📌 *Resultado:* Se estructura el texto de la NDC como una base consultable de fragmentos temáticos, alineada con los criterios de análisis semántico y trazabilidad metodológica.
+
+---
 A partir de la similitud semántica entre los comentarios enriquecidos y los fragmentos del anteproyecto de la NDC:
 
 - Cada comentario se compara con los nodos `:TaxonomiaNDC`, usando embeddings y similitud coseno.
