@@ -151,6 +151,10 @@ Cada nodo `:TaxonomiaNDC` contiene el texto del fragmento, su contexto, capítul
 - Relacionar comentarios con secciones específicas del texto base.
 - Generar recomendaciones para modificar o reforzar cada fragmento.
 
+📄 [Documento fuente del anteproyecto (PDF)](https://drive.google.com/file/d/1JaTLocgEdW8yamXtrzbxN7CeGW4bjS8x/view?usp=sharing)  
+📑 [CSV con la estructura fragmentada del texto base](https://docs.google.com/spreadsheets/d/e/2PACX-1vTQKppSeriGcxmGbd2qIlEfDkcDtVpNn1eZN5reNEHE_xYOPVlD1MXH7idxT9ky5IUCXu0JCXmb3VjE/pub?gid=1875731543&single=true&output=csv)
+
+
 📌 *Resultado:* Se estructura el texto de la NDC como una base consultable de fragmentos temáticos, alineada con los criterios de análisis semántico y trazabilidad metodológica.
 
 ---
